@@ -19,4 +19,13 @@
     <string name="wednesday">Wednesday</string>
     <string name="thursday">Thursday</string>
     <string name="_18_c">18ºC</string>
+    <string name="search_city">City</string>
+    <string name="st_petersburg">St.Petersburg</string>
+    <string name="omsk">Omsk</string>
+    <string name="los_angeles">Los Angeles</string>
+    <string name="anapa">Anapa</string>
+    <string name="show_details">Show:</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="pressure">Pressure</string>
+    <string name="air_quality">Air quality</string>
 </resources>

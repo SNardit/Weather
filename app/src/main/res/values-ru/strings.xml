@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Погода</string>
     <string name="moscow">Москва</string>
-    <string name="new_york">Нью Йорк</string>
+    <string name="new_york">Нью-Йорк</string>
     <string name="_22_c">22ºC</string>
     <string name="today">Сегодня</string>
     <string name="_27_july_2020_monday">27 Июля, 2020, Понедельник</string>
@@ -20,4 +20,13 @@
     <string name="wednesday">Среда</string>
     <string name="thursday">Четверг</string>
     <string name="_18_c">18ºC</string>
+    <string name="search_city">Город</string>
+    <string name="st_petersburg">Санкт-Петербург</string>
+    <string name="omsk">Омск</string>
+    <string name="los_angeles">Лос-Анджелес</string>
+    <string name="anapa">Анапа</string>
+    <string name="show_details">Показать:</string>
+    <string name="wind_speed">Скорость ветра</string>
+    <string name="pressure">Давление</string>
+    <string name="air_quality">Качество воздуха</string>
 </resources>
