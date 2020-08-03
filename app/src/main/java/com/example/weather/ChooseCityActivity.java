@@ -26,8 +26,6 @@ public class ChooseCityActivity extends AppCompatActivity {
         clickOnCity(textViewNewYork);
         clickOnCity(textViewLosAngeles);
         clickOnCity(textViewAnapa);
-
-
     }
 
     private void initViews() {
@@ -43,7 +41,6 @@ public class ChooseCityActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Toast.makeText(getApplicationContext(), textView.getText(), Toast.LENGTH_SHORT).show();
             }
         });
