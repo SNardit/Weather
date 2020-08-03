@@ -13,6 +13,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private Button cityChangeButton;
     private TextView cityTextView;
+
     private String TAG = "Life cycle";
     private final String cityDataKey = "cityDataKey";
 
