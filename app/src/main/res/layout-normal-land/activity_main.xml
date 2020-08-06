@@ -44,7 +44,7 @@
             android:id="@+id/textViewDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="48dp"
             android:text="@string/today"
             android:textColor="@color/textCityColor"
             android:textSize="24sp"
@@ -55,7 +55,7 @@
             android:id="@+id/textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="48dp"
             android:layout_marginTop="32dp"
             android:text="@string/_27_july_2020_monday"
             app:layout_constraintStart_toEndOf="@+id/divider4"
@@ -69,24 +69,12 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="3dp"
             android:text="@string/sunny"
+            android:textColor="@color/colorPrimary"
             android:textSize="30sp"
             app:layout_constraintBottom_toTopOf="@+id/textViewTemperature"
             app:layout_constraintEnd_toStartOf="@+id/divider4"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="99dp"
-            android:layout_height="53dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/change_city"
-            app:layout_constraintBottom_toTopOf="@+id/switch1"
-            app:layout_constraintEnd_toStartOf="@+id/divider4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTemperature" />
 
         <Switch
             android:id="@+id/switch1"
@@ -181,53 +169,49 @@
 
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="38dp"
+                android:layout_width="72dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginStart="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewHour1"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/sunny" />
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="38dp"
+                android:layout_width="72dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toEndOf="@+id/imageView1"
                 app:layout_constraintTop_toBottomOf="@+id/textViewHour2"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/sunny" />
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="44dp"
+                android:layout_width="72dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textViewHour3"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/sunny" />
 
             <ImageView
                 android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="42dp"
+                android:layout_width="72dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toBottomOf="@+id/textViewHour"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/sunny" />
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="44dp"
+                android:layout_width="72dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
                 app:layout_constraintTop_toBottomOf="@+id/textViewHour4"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/sunny" />
 
             <TextView
                 android:id="@+id/textViewTemp1"
@@ -236,6 +220,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_22_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView1" />
 
@@ -246,6 +231,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_22_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/textViewTemp1"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
@@ -256,6 +242,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_23_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/textViewTemp2"
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
@@ -266,6 +253,7 @@
                 android:layout_marginStart="43dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_25_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/textViewTemp3"
                 app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
@@ -276,6 +264,7 @@
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_25_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/textViewTemp4"
                 app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
@@ -302,6 +291,7 @@
                 android:layout_marginStart="55dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/_23_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/imageViewDay1"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -312,6 +302,7 @@
                 android:layout_marginStart="55dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/_23_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/imageViewDay2"
                 app:layout_constraintTop_toBottomOf="@+id/textViewNightTemp1" />
 
@@ -322,6 +313,7 @@
                 android:layout_marginStart="55dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/_23_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/imageViewDay3"
                 app:layout_constraintTop_toBottomOf="@+id/textViewNightTemp2" />
 
@@ -357,33 +349,33 @@
 
             <ImageView
                 android:id="@+id/imageViewDay1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="150dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/cloudy" />
 
             <ImageView
                 android:id="@+id/imageViewDay2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="150dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewDay1"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/sunny" />
 
             <ImageView
                 android:id="@+id/imageViewDay3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="150dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewDay2"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
+                app:srcCompat="@drawable/rainy" />
 
             <TextView
                 android:id="@+id/textViewNightTemp1"
@@ -392,6 +384,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/_18_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/textViewDayTemp"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -402,6 +395,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/_18_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/textViewDayTemp4"
                 app:layout_constraintTop_toBottomOf="@+id/textViewNightTemp1" />
 
@@ -412,6 +406,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/_18_c"
+                android:textColor="@color/textCityColor"
                 app:layout_constraintStart_toEndOf="@+id/textViewDayTemp5"
                 app:layout_constraintTop_toBottomOf="@+id/textViewNightTemp2" />
 
@@ -423,9 +418,34 @@
             android:layout_height="395dp"
             android:layout_marginEnd="120dp"
             android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="16dp" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/menuImageView"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@+id/textViewCity"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/menu_button" />
+
+        <ImageView
+            android:id="@+id/infoImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="35dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toEndOf="@+id/textViewCity"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/info" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
