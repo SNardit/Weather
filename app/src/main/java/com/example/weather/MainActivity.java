@@ -133,4 +133,13 @@ public class MainActivity extends AppCompatActivity {
         String dateFormat = String.format("%1$s %2$te %2$tB %2$tY, %2$tA", "", date);
         dateView.setText(dateFormat);
     }
+
+   /* private void celsiusOrFahrenheit(final TextView textView) {
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchCity.setText(textView.getText().toString());
+            }
+        });
+    }*/
 }
