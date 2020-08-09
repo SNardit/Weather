@@ -1,20 +1,28 @@
 package com.example.weather;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
-    private Button cityChangeButton;
+    private ImageView menuButton;
+    private ImageView infoButton;
     private TextView cityTextView;
+    private TextView dateView;
     private String TAG = "Life cycle";
     private final String cityDataKey = "cityDataKey";
+    private final int requestCode = 777;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
         setOnBtnChangeCity();
+        setOnBtnInfoCity();
+        setDate();
         Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onCreate");
     }
@@ -79,22 +89,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        cityChangeButton = findViewById(R.id.button);
+        menuButton = findViewById(R.id.menuImageView);
+        infoButton = findViewById(R.id.infoImageView);
         cityTextView = findViewById(R.id.textViewCity);
+        dateView = findViewById(R.id.textViewDate);
     }
 
     private void setOnBtnChangeCity() {
-        cityChangeButton.setOnClickListener(new View.OnClickListener() {
+        menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String currentCity = cityTextView.getText().toString();
-                String newYorkCity = getResources().getString(R.string.new_york);
-                if (currentCity.equals(newYorkCity)) {
-                    cityTextView.setText(R.string.moscow);
-                }
-                else cityTextView.setText(R.string.new_york);
+                Intent intent = new Intent(MainActivity.this, ChooseCityActivity.class);
+                startActivityForResult(intent, requestCode);
             }
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == this.requestCode && resultCode == RESULT_OK && data != null) {
+            String strData = data.getStringExtra(ChooseCityActivity.dataKey);
+            if (!strData.equals("") && strData.matches(".*\\w.*")) {
+                cityTextView.setText(strData);
+            }
+        }
+    }
+
+    private void setOnBtnInfoCity() {
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String city = cityTextView.getText().toString();
+                Uri uri = Uri.parse("https://ru.wikipedia.org/wiki/" + city);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setDate() {
+        Date date = new Date();
+        String dateFormat = String.format("%1$s %2$te %2$tB %2$tY, %2$tA", "", date);
+        dateView.setText(dateFormat);
+    }
+
+   /* private void celsiusOrFahrenheit(final TextView textView) {
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchCity.setText(textView.getText().toString());
+            }
+        });
+    }*/
 }
