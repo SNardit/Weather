@@ -28,4 +28,5 @@
     <string name="wind_speed">Wind Speed</string>
     <string name="pressure">Pressure</string>
     <string name="air_quality">Air quality</string>
+    <string name="empty_list">Empty list</string>
 </resources>

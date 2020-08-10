@@ -16,7 +16,23 @@ import android.widget.Toast;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    private ImageView menuButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        int countOfFragmentInManager = getSupportFragmentManager().getBackStackEntryCount();
+        if (countOfFragmentInManager >0) {
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    /*private ImageView menuButton;
     private ImageView infoButton;
     private TextView cityTextView;
     private TextView dateView;
@@ -134,12 +150,15 @@ public class MainActivity extends AppCompatActivity {
         dateView.setText(dateFormat);
     }
 
-   /* private void celsiusOrFahrenheit(final TextView textView) {
+   *//* private void celsiusOrFahrenheit(final TextView textView) {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searchCity.setText(textView.getText().toString());
             }
         });
+    }*//*
+
+    public static class WeatherActivity {
     }*/
 }

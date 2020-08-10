@@ -29,4 +29,5 @@
     <string name="wind_speed">Скорость ветра</string>
     <string name="pressure">Давление</string>
     <string name="air_quality">Качество воздуха</string>
+    <string name="empty_list">Empty list</string>
 </resources>
