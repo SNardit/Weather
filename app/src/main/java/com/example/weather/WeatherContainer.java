@@ -4,8 +4,14 @@ import java.io.Serializable;
 
 public class WeatherContainer implements Serializable {
 
-        public int position = 0;
+
+
+    public int position = 0;
         public String cityName = "";
+        public int getPosition() {
+        return position;
     }
+    }
+
 
 

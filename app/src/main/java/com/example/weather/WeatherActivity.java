@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.weather.fragments.WeatherFragment;
 
+
 public class WeatherActivity extends AppCompatActivity {
 
     @Override
@@ -28,5 +29,4 @@ public class WeatherActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
 }

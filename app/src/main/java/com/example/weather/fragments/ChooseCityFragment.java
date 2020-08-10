@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.weather.MainActivity;
 import com.example.weather.R;
 import com.example.weather.WeatherActivity;
 import com.example.weather.WeatherContainer;
@@ -31,19 +30,21 @@ public class ChooseCityFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.choose_city_fragment, container, false);
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        initList();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initList();
 
         isExistWeather = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
@@ -57,10 +58,18 @@ public class ChooseCityFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt("Current city", currentPosition);
+        super.onSaveInstanceState(outState);
+    }
+
+
     private void initView(View view) {
         citiesListView = view.findViewById(R.id.cities_list_view);
         emptyTextView = view.findViewById(R.id.cities_list_empty_view);
     }
+
 
     private void initList() {
         ArrayAdapter adapter=
@@ -79,6 +88,7 @@ public class ChooseCityFragment extends Fragment {
 
     private void showWeather() {
         if (isExistWeather) {
+
             citiesListView.setItemChecked(currentPosition, true);
 
             WeatherFragment detail = (WeatherFragment)
