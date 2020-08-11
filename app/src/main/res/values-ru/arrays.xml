@@ -1,0 +1,11 @@
+<resources>
+    <string-array name="cities">
+        <item>Москва</item>
+        <item>Санкт-Петербург</item>
+        <item>Нью-Йорк</item>
+        <item>Омск</item>
+        <item>Анапа</item>
+        <item>Лос Анджелес</item>
+    </string-array>
+
+</resources>

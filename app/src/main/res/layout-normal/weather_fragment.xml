@@ -17,16 +17,18 @@
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+                android:background="@color/background"
+                tools:context=".MainActivity">
 
                 <ImageView
                     android:id="@+id/infoImageView"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="20dp"
                     android:clickable="true"
                     android:focusable="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -37,12 +39,10 @@
                     android:id="@+id/textViewCity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="18dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/moscow"
                     android:textColor="@color/textCityColor"
-                    android:textSize="30sp"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -52,11 +52,10 @@
                     android:id="@+id/textViewTemperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="30dp"
                     android:text="@string/_22_c"
                     android:textColor="@color/textCityColor"
-                    android:textSize="50sp"
+                    android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.488"
                     app:layout_constraintStart_toStartOf="parent"
@@ -66,8 +65,8 @@
                     android:id="@+id/textViewDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/today"
                     android:textColor="@color/textCityColor"
                     android:textSize="24sp"
@@ -78,7 +77,7 @@
                     android:id="@+id/textViewDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginBottom="2dp"
                     android:text="@string/_27_july_2020_monday"
                     app:layout_constraintBottom_toTopOf="@+id/textViewDay"
@@ -88,23 +87,19 @@
                     android:id="@+id/textViewDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="3dp"
                     android:text="@string/sunny"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="30sp"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toTopOf="@+id/textViewTemperature"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layoutHourlyWeather"
-                    android:layout_width="392dp"
-                    android:layout_height="119dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textViewDay">
@@ -114,74 +109,71 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="0dp"
-                        app:layout_constraintTop_toTopOf="parent"
                         android:background="?android:attr/listDivider"
-                        tools:layout_editor_absoluteY="8dp"
-                        tools:ignore="MissingConstraints" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/textViewHour1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_9_00"
+                        android:textAlignment="center"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/textViewHour2"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_10_00"
-                        app:layout_constraintStart_toEndOf="@id/textViewHour1"
+                        android:textAlignment="center"
+                        app:layout_constraintStart_toEndOf="@+id/textViewHour1"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/textViewHour3"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_11_00"
+                        android:textAlignment="center"
                         app:layout_constraintStart_toEndOf="@+id/textViewHour2"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/textViewHour4"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_13_00"
+                        android:textAlignment="center"
                         app:layout_constraintStart_toEndOf="@+id/textViewHour"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/textViewHour"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_12_00"
+                        android:textAlignment="center"
                         app:layout_constraintStart_toEndOf="@+id/textViewHour3"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/imageView1"
-                        android:layout_width="72dp"
+                        android:layout_width="59dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginStart="24dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textViewHour1"
                         app:srcCompat="@drawable/sunny" />
 
                     <ImageView
                         android:id="@+id/imageView2"
-                        android:layout_width="72dp"
+                        android:layout_width="59dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
                         app:layout_constraintStart_toEndOf="@+id/imageView1"
@@ -190,7 +182,7 @@
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="72dp"
+                        android:layout_width="59dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
                         app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -199,7 +191,7 @@
 
                     <ImageView
                         android:id="@+id/imageView4"
-                        android:layout_width="72dp"
+                        android:layout_width="59dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
                         app:layout_constraintStart_toEndOf="@+id/imageView3"
@@ -208,7 +200,7 @@
 
                     <ImageView
                         android:id="@+id/imageView5"
-                        android:layout_width="72dp"
+                        android:layout_width="59dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
                         app:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -217,76 +209,76 @@
 
                     <TextView
                         android:id="@+id/textViewTemp1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_22_c"
+                        android:textAlignment="center"
                         android:textColor="@color/textCityColor"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/imageView1" />
 
                     <TextView
                         android:id="@+id/textViewTemp2"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_22_c"
+                        android:textAlignment="center"
                         android:textColor="@color/textCityColor"
                         app:layout_constraintStart_toEndOf="@+id/textViewTemp1"
                         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
                     <TextView
                         android:id="@+id/textViewTemp3"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_23_c"
+                        android:textAlignment="center"
                         android:textColor="@color/textCityColor"
                         app:layout_constraintStart_toEndOf="@+id/textViewTemp2"
                         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
                     <TextView
                         android:id="@+id/textViewTemp4"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="43dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_25_c"
+                        android:textAlignment="center"
                         android:textColor="@color/textCityColor"
                         app:layout_constraintStart_toEndOf="@+id/textViewTemp3"
                         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
                     <TextView
                         android:id="@+id/textViewTemp5"
-                        android:layout_width="wrap_content"
+                        android:layout_width="59dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="45dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/_25_c"
+                        android:textAlignment="center"
                         android:textColor="@color/textCityColor"
                         app:layout_constraintStart_toEndOf="@+id/textViewTemp4"
                         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
                     <View
                         android:id="@+id/divider3"
-                        android:layout_width="match_parent"
+                        android:layout_width="395dp"
                         android:layout_height="1dp"
-                        android:layout_marginBottom="0dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="-8dp"
                         android:background="?android:attr/listDivider"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         tools:ignore="MissingConstraints" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layoutDailyWeather"
-                    android:layout_width="396dp"
+                    android:id="@+id/layouDailyWeather"
+                    android:layout_width="match_parent"
                     android:layout_height="164dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -419,6 +411,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/textViewNightTemp2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
