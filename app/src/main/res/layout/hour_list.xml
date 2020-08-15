@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="0dp"
+    android:layout_marginEnd="0dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background">
+
+        <TextView
+            android:id="@+id/textViewHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="@string/_9_00" />
+
+        <ImageView
+            android:id="@+id/imageViewHourWeatherPic"
+            android:layout_width="72dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/sunny"
+            android:layout_below="@+id/textViewHour" />
+
+        <TextView
+            android:id="@+id/textViewHourTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/_22_c"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/textCityColor"
+            android:layout_below="@+id/imageViewHourWeatherPic" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -6,45 +6,52 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weather.recyclerChooseCity.IRVOnItemClick;
 import com.example.weather.R;
+import com.example.weather.recyclerChooseCity.RecyclerDataAdapterChooseCity;
 import com.example.weather.WeatherActivity;
 import com.example.weather.WeatherContainer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
-public class ChooseCityFragment extends Fragment {
-    private ListView citiesListView;
-    private TextView emptyTextView;
+public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
+    private RecyclerView recyclerView;
+    private RecyclerDataAdapterChooseCity adapterChooseCity;
+    public ArrayList<String> listCities;
 
     private boolean isExistWeather;
     private int currentPosition = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        fillUpArrayListCity();
 
         return inflater.inflate(R.layout.choose_city_fragment, container, false);
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        setUpRecyclerView();
+        makeDecorator();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initList();
 
         isExistWeather = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
@@ -53,7 +60,6 @@ public class ChooseCityFragment extends Fragment {
         }
 
         if (isExistWeather) {
-            citiesListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             showWeather();
         }
     }
@@ -64,32 +70,24 @@ public class ChooseCityFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-
-    private void initView(View view) {
-        citiesListView = view.findViewById(R.id.cities_list_view);
-        emptyTextView = view.findViewById(R.id.cities_list_empty_view);
+    private void fillUpArrayListCity() {
+        listCities = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.cities)));
     }
 
+    private void initView(View view) {
+        recyclerView = view.findViewById(R.id.recyclerView);
+    }
 
-    private void initList() {
-        ArrayAdapter adapter=
-                ArrayAdapter.createFromResource(Objects.requireNonNull(getActivity()), R.array.cities,
-                android.R.layout.simple_list_item_activated_1);
+    private void setUpRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        adapterChooseCity = new RecyclerDataAdapterChooseCity(listCities, this);
 
-        citiesListView.setAdapter(adapter);
-
-        citiesListView.setEmptyView(emptyTextView);
-
-        citiesListView.setOnItemClickListener((parent, view, position, id) -> {
-            currentPosition = position;
-            showWeather();
-        });
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapterChooseCity);
     }
 
     private void showWeather() {
         if (isExistWeather) {
-
-            citiesListView.setItemChecked(currentPosition, true);
 
             WeatherFragment detail = (WeatherFragment)
                     Objects.requireNonNull(getFragmentManager()).findFragmentById(R.id.weather);
@@ -120,4 +118,16 @@ public class ChooseCityFragment extends Fragment {
         return container;
     }
 
+    @Override
+    public void onItemClick(String itemText) {
+        currentPosition = listCities.indexOf(itemText);
+        showWeather();
+    }
+
+    private void makeDecorator() {
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL);
+        itemDecoration.setDrawable(Objects.requireNonNull(
+                ContextCompat.getDrawable(getContext(), R.drawable.decorator_item)));
+        recyclerView.addItemDecoration(itemDecoration);
+    }
 }
