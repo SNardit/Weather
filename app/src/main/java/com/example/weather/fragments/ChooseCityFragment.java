@@ -21,6 +21,9 @@ import com.example.weather.R;
 import com.example.weather.recyclerChooseCity.RecyclerDataAdapterChooseCity;
 import com.example.weather.WeatherActivity;
 import com.example.weather.WeatherContainer;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,10 +32,13 @@ import java.util.Objects;
 public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     private RecyclerView recyclerView;
     private RecyclerDataAdapterChooseCity adapterChooseCity;
-    public ArrayList<String> listCities;
+    private ArrayList<String> listCities;
+    private TextInputEditText searchCity;
+    private MaterialButton searchButton;
 
     private boolean isExistWeather;
     private int currentPosition = 0;
+    private String city;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,18 +51,25 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        setUpRecyclerView();
         makeDecorator();
+        setUpRecyclerView();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setOnInputCityClickListener();
+        setOnBtnClickListener();
+
+
         isExistWeather = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
             currentPosition = savedInstanceState.getInt("Current city", 0);
+            listCities = savedInstanceState.getStringArrayList("Cities list");
+            setUpRecyclerView();
+
         }
 
         if (isExistWeather) {
@@ -66,6 +79,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putStringArrayList("Cities list", listCities);
         outState.putInt("Current city", currentPosition);
         super.onSaveInstanceState(outState);
     }
@@ -75,6 +89,8 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     }
 
     private void initView(View view) {
+        searchCity = view.findViewById(R.id.inputCityText);
+        searchButton = view.findViewById(R.id.buttonSearch);
         recyclerView = view.findViewById(R.id.recyclerView);
     }
 
@@ -86,6 +102,34 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         recyclerView.setAdapter(adapterChooseCity);
     }
 
+    private void setOnInputCityClickListener() {
+        searchCity.setOnClickListener(this::actionForChooseCity);
+    }
+
+    private void setOnBtnClickListener() {
+        searchButton.setOnClickListener(this::actionForChooseCity);
+    }
+
+    private void actionForChooseCity(View view) {
+        city = Objects.requireNonNull(searchCity.getText()).toString();
+        if (!city.matches("")) {
+
+            Snackbar.make(view, "Choose entered city?", Snackbar.LENGTH_LONG).
+                    setAction("Choose", (v) -> {
+                        boolean isCityExist = false;
+                        for (int i = 0; i < listCities.size(); i++) {
+                            isCityExist = listCities.get(i).equals(city);
+                            if (isCityExist) break;
+                        }
+                        if (!isCityExist) {
+                        listCities.add(city);
+                        }
+                        currentPosition = listCities.indexOf(city);
+                        showWeather();
+                }).show();
+        }
+    }
+
     private void showWeather() {
         if (isExistWeather) {
 
@@ -95,6 +139,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
             if (detail == null || detail.getIndex() != currentPosition) {
 
                 detail = WeatherFragment.create(getWeatherContainer());
+                setUpRecyclerView();
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.weather, detail);
@@ -111,10 +156,9 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     }
 
     private WeatherContainer getWeatherContainer() {
-        String[] cities = getResources().getStringArray(R.array.cities);
         WeatherContainer container = new WeatherContainer();
         container.position = currentPosition;
-        container.cityName = cities[currentPosition];
+        container.cityName = listCities.get(currentPosition);
         return container;
     }
 

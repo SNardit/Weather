@@ -30,4 +30,10 @@
     <string name="pressure">Давление</string>
     <string name="air_quality">Качество воздуха</string>
     <string name="empty_list">Empty list</string>
+    <string name="search">Искать</string>
+    <string name="enter_city">Введите город</string>
+    <string name="city_info">О городе</string>
+    <string name="about_developers">О разработчиках</string>
+    <string name="text_about_developers">©snardit-2020 \n e-mail:s.nardit@gmail.com</string>
+    <string name="home">Домой</string>
 </resources>

@@ -2,43 +2,26 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/width_height_parents"
     android:background="@color/background"
     android:id="@+id/fragment_container">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        style="@style/width_height_parents">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background"
-                tools:context=".MainActivity">
-
-                <ImageView
-                    android:id="@+id/infoImageView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="20dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/info" />
+                style="@style/width_height_parents"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
                 <TextView
                     android:id="@+id/textViewCity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/margin_start_end"
                     android:layout_marginTop="8dp"
                     android:text="@string/moscow"
                     android:textColor="@color/textCityColor"
@@ -49,58 +32,58 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/textViewDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/margin_start_end"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/sunny"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewCity"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
                     android:id="@+id/textViewTemperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    style="@style/margin_start_end"
+                    android:layout_marginTop="8dp"
                     android:text="@string/_22_c"
                     android:textColor="@color/textCityColor"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.488"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewCity" />
-
-                <TextView
-                    android:id="@+id/textViewDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/today"
-                    android:textColor="@color/textCityColor"
-                    android:textSize="24sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewTemperature" />
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
                 <TextView
                     android:id="@+id/textViewDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="2dp"
+                    style="@style/margin_top_start_for_weather_fragment_normal"
                     android:text="@string/_27_july_2020_monday"
-                    app:layout_constraintBottom_toTopOf="@+id/textViewDay"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewTemperature"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
-                    android:id="@+id/textViewDescription"
+                    android:id="@+id/textViewDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sunny"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toTopOf="@+id/textViewTemperature"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    style="@style/margin_top_start_for_weather_fragment_normal"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/today"
+                    android:textColor="@color/textCityColor"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewWeatherHour"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    style="@style/margin_start_end"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textViewDay" />
@@ -109,9 +92,8 @@
                     android:id="@+id/recyclerViewWeatherDay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    style="@style/margin_start_end"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recyclerViewWeatherHour" />
