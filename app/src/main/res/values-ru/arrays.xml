@@ -8,4 +8,27 @@
         <item>Лос Анджелес</item>
     </string-array>
 
+    <string-array name="weatherPic">
+        <item>@drawable/sunny</item>
+        <item>@drawable/cloudy</item>
+        <item>@drawable/rainy</item>
+    </string-array>
+
+    <string-array name="hours">
+        <item>10:00</item>
+        <item>11:00</item>
+        <item>12:00</item>
+        <item>13:00</item>
+        <item>14:00</item>
+    </string-array>
+
+    <string-array name="temp">
+        <item>20ºC</item>
+        <item>21ºC</item>
+        <item>22ºC</item>
+        <item>22ºC</item>
+        <item>23ºC</item>
+    </string-array>
+
+
 </resources>
