@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="0dp"
-    android:layout_marginEnd="0dp"
     android:layout_marginBottom="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
     android:layout_marginTop="8dp">
 
     <RelativeLayout
@@ -18,12 +18,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:text="@string/_9_00" />
 
         <ImageView
             android:id="@+id/imageViewHourWeatherPic"
-            android:layout_width="72dp"
+            android:layout_width="65dp"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:layout_centerHorizontal="true"
@@ -35,6 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/_22_c"
             android:layout_centerHorizontal="true"
             android:textColor="@color/textCityColor"

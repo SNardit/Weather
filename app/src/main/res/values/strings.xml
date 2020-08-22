@@ -29,5 +29,12 @@
     <string name="pressure">Pressure</string>
     <string name="air_quality">Air quality</string>
     <string name="empty_list">Empty list</string>
-    <string name="date_format">%1$s %2$te %2$tB %2$tY, %2$tA</string>
+    <string name="date_format" translatable="false">%1$s %2$te %2$tB %2$tY, %2$tA</string>
+    <string name="search">Search</string>
+    <string name="enter_city">Enter city</string>
+    <string name="city_info">City Info</string>
+    <string name="about_developers">About Developers</string>
+    <string name="text_about_developers" translatable="false">©snardit-2020 \n
+        e-mail:s.nardit@gmail.com</string>
+    <string name="home">Home</string>
 </resources>
