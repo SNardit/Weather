@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,31 +22,36 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather.AboutDevelopers;
+import com.example.weather.CheckWeather;
 import com.example.weather.R;
+import com.example.weather.WeatherContainer;
+import com.example.weather.modelOneCallWeather.OneCallRequest;
 import com.example.weather.recyclerWeatherByDays.RecyclerDataAdapterWeatherByDays;
 import com.example.weather.recyclerWeatherByDays.WeatherByDays;
 import com.example.weather.recyclerWeatherByHours.RecyclerDataAdapterWeatherByHours;
 import com.example.weather.recyclerWeatherByHours.WeatherByHours;
-import com.example.weather.WeatherContainer;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Objects;
+import java.util.Locale;
+
 
 public class WeatherFragment extends Fragment {
     private TextView cityTextView;
     private TextView dateView;
+    private TextView tempTextView;
+    private TextView descriptionTextView;
+
 
     private RecyclerView recyclerViewHours;
     private RecyclerDataAdapterWeatherByHours adapterWeatherByHours;
-    private ArrayList<WeatherByHours> weatherByHours;
+    private ArrayList<WeatherByHours> weatherByHours = new ArrayList<>();
 
     private RecyclerView recyclerViewDays;
     private RecyclerDataAdapterWeatherByDays adapterWeatherByDays;
-    private ArrayList<WeatherByDays> weatherByDays;
+    private ArrayList<WeatherByDays> weatherByDays = new ArrayList<>();
 
     static WeatherFragment create(WeatherContainer container) {
         WeatherFragment fragment = new WeatherFragment();
@@ -58,7 +65,7 @@ public class WeatherFragment extends Fragment {
     int getIndex() {
 
         WeatherContainer weatherContainer = (WeatherContainer)
-                (Objects.requireNonNull(getArguments()).getSerializable("index"));
+                (requireArguments().getSerializable("index"));
 
         try {
             assert weatherContainer != null;
@@ -71,7 +78,7 @@ public class WeatherFragment extends Fragment {
     String getCityName() {
 
         WeatherContainer weatherContainer = (WeatherContainer)
-                (Objects.requireNonNull(getArguments()).getSerializable("index"));
+                (requireArguments().getSerializable("index"));
         try {
             assert weatherContainer != null;
             return weatherContainer.cityName;
@@ -84,7 +91,6 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.weather_fragment, container, false);
-        fillUpArrayLists();
 
         return view;
     }
@@ -98,6 +104,7 @@ public class WeatherFragment extends Fragment {
         String cityName = getCityName();
         cityTextView.setText(cityName);
         setDate();
+        setCurrentWeather();
     }
 
     @Override
@@ -126,37 +133,64 @@ public class WeatherFragment extends Fragment {
         }
     }
 
-    private void fillUpArrayLists() {
-        weatherByHours = new ArrayList<>();
-
-        for (int i = 0; i < 5; i++) {
-            String hour = getResources().getStringArray(R.array.hours)[i];
-            @SuppressLint("UseCompatLoadingForDrawables") Drawable pic = getResources().getDrawable(R.drawable.sunny);
-            String temp = getResources().getStringArray(R.array.temp)[i];
-            weatherByHours.add(new WeatherByHours(hour, pic, temp));
-        }
-
-        weatherByDays = new ArrayList<>();
-
-        for (int i = 0; i < 3; i++) {
-            String day = makeDayOfWeek(i);
-            @SuppressLint("UseCompatLoadingForDrawables") Drawable pic = getResources().getDrawable(R.drawable.cloudy);
-            String daytime = getResources().getStringArray(R.array.temp)[i];
-            String nighttime = getResources().getStringArray(R.array.temp)[i];
-            weatherByDays.add(new WeatherByDays(day, pic, daytime, nighttime));
-        }
+    private void setCurrentWeather() {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        new Thread((Runnable) () -> {
+            CheckWeather checkWeather = new CheckWeather();
+            checkWeather.getCoordCity(getCityName());
+            if (checkWeather.getWeatherRequest() == null) {
+                Snackbar.make(cityTextView, "Choose entered city?", Snackbar.LENGTH_LONG).
+                        setText("Connection error or/and city is not exist!").show();
+            }
+            else {
+                checkWeather.getCurrentWeather();
+                handler.post(() -> displayWeather(checkWeather.getOneCallRequest()));
+            }
+        }).start();
     }
 
-    private String makeDayOfWeek(int i) {
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.add(Calendar.DAY_OF_WEEK, i+1);
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-        return sdf.format(cal.getTime());
+    public void displayWeather(OneCallRequest oneCallRequest) {
+        int seconds = oneCallRequest.getTimezone_offset();
+
+        String temperatureValue = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getCurrent().getTemp()) + "ºC";
+        tempTextView.setText(temperatureValue);
+
+        String descriptionText =  String.format(Locale.getDefault(), "%s", oneCallRequest.getCurrent().getWeather()[0].getDescription());
+        descriptionTextView.setText(descriptionText);
+
+        Date date = new Date((oneCallRequest.getCurrent().getDt() + seconds) * 1000);
+        dateView.setText(makeDateFormat(date, "dd MMMM yyyy, EEEE"));
+
+        for (int i = 0; i < 12; i++) {
+            Date hourDate = new Date((oneCallRequest.getHourly()[i].getDt() + seconds) * 1000);
+            String hour = makeDateFormat(hourDate, "HH");
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable pic = getResources().getDrawable(R.drawable.sunny);
+            String temp = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getHourly()[i].getTemp()) + "ºC";
+            weatherByHours.add(new WeatherByHours(hour, pic, temp));
+        }
+        setUpRecyclerViewHours();
+
+        for (int i = 0; i < 3; i++) {
+            Date dayDate = new Date((oneCallRequest.getDaily()[i].getDt() + seconds) * 1000);
+            String day = makeDateFormat(dayDate, "EEEE");
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable pic = getResources().getDrawable(R.drawable.cloudy);
+            String daytime = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getDaily()[i].getTemp().getDay()) + "ºC";
+            String nighttime = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getDaily()[i].getTemp().getNight()) + "ºC";
+            weatherByDays.add(new WeatherByDays(day, pic, daytime, nighttime));
+        }
+        setUpRecyclerViewDays();
+    }
+
+    private String makeDateFormat (Date date, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
     }
 
     private void initView(View view) {
         cityTextView = view.findViewById(R.id.textViewCity);
         dateView = view.findViewById(R.id.textViewDate);
+        tempTextView = view.findViewById(R.id.textViewTemperature);
+        descriptionTextView = view.findViewById(R.id.textViewDescription);
         recyclerViewHours = view.findViewById(R.id.recyclerViewWeatherHour);
         recyclerViewDays = view.findViewById(R.id.recyclerViewWeatherDay);
     }
@@ -191,7 +225,8 @@ public class WeatherFragment extends Fragment {
     }
     private void setOnBtnInfoDevelop() {
         Intent intent = new Intent();
-        intent.setClass(Objects.requireNonNull(getActivity()), AboutDevelopers.class);
+        intent.setClass(requireActivity(), AboutDevelopers.class);
         startActivity(intent);
     }
+
 }

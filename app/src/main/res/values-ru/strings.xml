@@ -3,37 +3,29 @@
     <string name="app_name">Погода</string>
     <string name="moscow">Москва</string>
     <string name="new_york">Нью-Йорк</string>
-    <string name="_22_c">22ºC</string>
+    <string name="empty_string" translatable="false"> </string>
     <string name="today">Сегодня</string>
-    <string name="_27_july_2020_monday">Дата</string>
-    <string name="sunny">Солнечно</string>
     <string name="change_city">Сменить город</string>
-    <string name="c_f">C / F</string>
-    <string name="_9_00">9:00</string>
-    <string name="_10_00">10:00</string>
-    <string name="_11_00">11:00</string>
-    <string name="_13_00">13.00</string>
-    <string name="_12_00">12.00</string>
-    <string name="_23_c">23ºC</string>
-    <string name="_25_c">25ºC</string>
-    <string name="tuesday">Вторник</string>
-    <string name="wednesday">Среда</string>
-    <string name="thursday">Четверг</string>
-    <string name="_18_c">18ºC</string>
+    <string name="c_f" translatable="false">C / F</string>
     <string name="search_city">Город</string>
     <string name="st_petersburg">Санкт-Петербург</string>
     <string name="omsk">Омск</string>
     <string name="los_angeles">Лос-Анджелес</string>
     <string name="anapa">Анапа</string>
     <string name="show_details">Показать:</string>
-    <string name="wind_speed">Скорость ветра</string>
-    <string name="pressure">Давление</string>
-    <string name="air_quality">Качество воздуха</string>
     <string name="empty_list">Empty list</string>
-    <string name="search">Искать</string>
-    <string name="enter_city">Введите город</string>
-    <string name="city_info">О городе</string>
+    <string name="date_format" translatable="false">%1$s %2$te %2$tB %2$tY, %2$tA</string>
+    <string name="search">Поиск</string>
+    <string name="enter_city">Ввести город</string>
+    <string name="city_info">Информация о городе</string>
     <string name="about_developers">О разработчиках</string>
-    <string name="text_about_developers">©snardit-2020 \n e-mail:s.nardit@gmail.com</string>
+    <string name="text_about_developers" translatable="false">©snardit-2020 \n
+        e-mail:s.nardit@gmail.com</string>
     <string name="home">Домой</string>
+    <string name="city">City</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="temp">Temp</string>
+    <string name="hour">Hour</string>
+    <string name="day_of_week">dayOfWeek</string>
 </resources>

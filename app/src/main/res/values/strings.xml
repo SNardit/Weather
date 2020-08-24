@@ -2,33 +2,17 @@
     <string name="app_name">Weather</string>
     <string name="moscow">Moscow</string>
     <string name="new_york">New York</string>
-    <string name="_22_c">22ºC</string>
+    <string name="empty_string" translatable="false"> </string>
     <string name="today">Today</string>
-    <string name="_27_july_2020_monday">Date</string>
-    <string name="sunny">Sunny</string>
     <string name="change_city">Change city</string>
     <string name="c_f">C / F</string>
-    <string name="_9_00">9:00</string>
-    <string name="_10_00">10:00</string>
-    <string name="_11_00">11:00</string>
-    <string name="_13_00">13.00</string>
-    <string name="_12_00">12.00</string>
-    <string name="_23_c">23ºC</string>
-    <string name="_25_c">25ºC</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="_18_c">18ºC</string>
     <string name="search_city">City</string>
     <string name="st_petersburg">St.Petersburg</string>
     <string name="omsk">Omsk</string>
     <string name="los_angeles">Los Angeles</string>
     <string name="anapa">Anapa</string>
     <string name="show_details">Show:</string>
-    <string name="wind_speed">Wind Speed</string>
-    <string name="pressure">Pressure</string>
-    <string name="air_quality">Air quality</string>
-    <string name="empty_list">Empty list</string>
+    <string name="empty_list" translatable="false">Empty list</string>
     <string name="date_format" translatable="false">%1$s %2$te %2$tB %2$tY, %2$tA</string>
     <string name="search">Search</string>
     <string name="enter_city">Enter city</string>
@@ -37,4 +21,10 @@
     <string name="text_about_developers" translatable="false">©snardit-2020 \n
         e-mail:s.nardit@gmail.com</string>
     <string name="home">Home</string>
+    <string name="city" translatable="false">City</string>
+    <string name="description" translatable="false">Description</string>
+    <string name="date" translatable="false">Date</string>
+    <string name="temp" translatable="false">Temp</string>
+    <string name="hour" translatable="false">Hour</string>
+    <string name="day_of_week" translatable="false">dayOfWeek</string>
 </resources>

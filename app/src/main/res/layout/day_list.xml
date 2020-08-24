@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_centerVertical="true"
-            android:text="@string/tuesday" />
+            android:text="@string/day_of_week" />
 
         <ImageView
             android:id="@+id/imageViewDayWeatherPic"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="200dp"
             android:layout_centerVertical="true"
-            android:text="@string/_23_c"
+            android:text="@string/temp"
             android:textColor="@color/textCityColor"
             android:layout_alignParentStart="true"/>
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="250dp"
             android:layout_centerVertical="true"
-            android:text="@string/_18_c"
+            android:text="@string/temp"
             android:textColor="@color/textCityColor"
             android:layout_alignParentStart="true"/>
 

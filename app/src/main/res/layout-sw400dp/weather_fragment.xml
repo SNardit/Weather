@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/width_height_parents"
     android:background="@color/background"
     android:id="@+id/fragment_container">
@@ -22,7 +21,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/margin_start_end_top"
-                    android:text="@string/moscow"
+                    android:text="@string/city"
                     android:textColor="@color/textCityColor"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -36,7 +35,7 @@
                     android:layout_height="wrap_content"
                     style="@style/margin_start_end"
                     android:layout_marginTop="8dp"
-                    android:text="@string/sunny"
+                    android:text="@string/description"
                     android:textColor="@color/colorPrimary"
                     android:textSize="30sp"
                     app:layout_constraintTop_toBottomOf="@+id/textViewCity"
@@ -48,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/margin_start_end_top"
-                    android:text="@string/_22_c"
+                    android:text="@string/temp"
                     android:textColor="@color/textCityColor"
                     android:textSize="50sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/margin_top_start_for_weather_fragment"
-                    android:text="@string/_27_july_2020_monday"
+                    android:text="@string/date"
                     app:layout_constraintTop_toBottomOf="@+id/textViewTemperature"
                     app:layout_constraintStart_toStartOf="parent" />
 
