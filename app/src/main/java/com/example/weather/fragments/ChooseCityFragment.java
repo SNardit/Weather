@@ -69,7 +69,6 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
             currentPosition = savedInstanceState.getInt("Current city", 0);
             listCities = savedInstanceState.getStringArrayList("Cities list");
             setUpRecyclerView();
-
         }
 
         if (isExistWeather) {
@@ -134,7 +133,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         if (isExistWeather) {
 
             WeatherFragment detail = (WeatherFragment)
-                    Objects.requireNonNull(getFragmentManager()).findFragmentById(R.id.weather);
+                    requireFragmentManager().findFragmentById(R.id.weather);
 
             if (detail == null || detail.getIndex() != currentPosition) {
 
@@ -149,7 +148,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
             }
         } else {
             Intent intent = new Intent();
-            intent.setClass(Objects.requireNonNull(getActivity()), WeatherActivity.class);
+            intent.setClass(requireActivity(), WeatherActivity.class);
             intent.putExtra("index", getWeatherContainer());
             startActivity(intent);
         }
@@ -169,9 +168,9 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     }
 
     private void makeDecorator() {
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL);
         itemDecoration.setDrawable(Objects.requireNonNull(
-                ContextCompat.getDrawable(getContext(), R.drawable.decorator_item)));
+                ContextCompat.getDrawable(requireContext(), R.drawable.decorator_item)));
         recyclerView.addItemDecoration(itemDecoration);
     }
 }

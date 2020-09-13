@@ -34,7 +34,7 @@ public class RecyclerDataAdapterWeatherByDays extends RecyclerView.Adapter<Recyc
         holder.textViewDay.setText(weatherDays.get(position).day);
         holder.weatherPicDay.setImageDrawable(weatherDays.get(position).image);
         holder.textViewDaytimeWeather.setText(weatherDays.get(position).weatherDaytime);
-        holder.textViewDaytimeWeather.setText(weatherDays.get(position).weatherNighttime);
+        holder.textViewNighttimeWeather.setText(weatherDays.get(position).weatherNighttime);
     }
 
     @Override
