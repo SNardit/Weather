@@ -27,4 +27,11 @@
     <string name="temp" translatable="false">Temp</string>
     <string name="hour" translatable="false">Hour</string>
     <string name="day_of_week" translatable="false">dayOfWeek</string>
+    <string name="feedback">Feedback</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_header">Navigation header</string>
+    <string name="NoteAboutCityDontExistInHistory"> is not in your forecast history</string>
+    <string name="e_mail">qwerty@gmail.com</string>
+    <string name="phone">000-000-00-00</string>
 </resources>

@@ -3,13 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/infoAboutCity"
+        android:orderInCategory="20"
         android:title="@string/city_info"
         android:icon="@drawable/info"
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/infoAboutDevelopers"
+        android:orderInCategory="30"
         android:title="@string/about_developers"
         android:icon="@drawable/develop"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/actSearch"
+        android:orderInCategory="10"
+        android:imeOptions="flagNoExtractUi"
+        android:maxLines="1"
+        android:maxLength="10"
+        style="@style/text"
+        android:title="@string/search"
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView" />
 
 </menu>

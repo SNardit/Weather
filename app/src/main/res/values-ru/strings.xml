@@ -28,4 +28,6 @@
     <string name="temp">Temp</string>
     <string name="hour">Hour</string>
     <string name="day_of_week">dayOfWeek</string>
+    <string name="NoteAboutCityDontExistInHistory">is not in your forecast history</string>
+    <string name="phone">000-000-00-00</string>
 </resources>
