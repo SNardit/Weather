@@ -2,6 +2,7 @@ package com.example.weather.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -114,23 +115,28 @@ public class WeatherFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            inflater.inflate(R.menu.menu_main, menu);
+            menu.findItem(R.id.actSearch).setVisible(false);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.infoAboutCity: {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.infoAboutCity:
                 setOnBtnInfoCity();
                 return true;
-            }
-            case R.id.infoAboutDevelopers: {
+
+            case R.id.infoAboutDevelopers:
                 setOnBtnInfoDevelop();
                 return true;
-            }
-            default: return false;
         }
+
+        return false;
     }
 
     private void setCurrentWeather() {
@@ -223,6 +229,7 @@ public class WeatherFragment extends Fragment {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
     }
+
     private void setOnBtnInfoDevelop() {
         Intent intent = new Intent();
         intent.setClass(requireActivity(), AboutDevelopers.class);
