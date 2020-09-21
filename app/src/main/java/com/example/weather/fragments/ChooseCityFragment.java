@@ -153,8 +153,6 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         city = Objects.requireNonNull(searchCity.getText()).toString();
         if (!city.matches("")) {
 
-            Snackbar.make(view, "Choose entered city?", Snackbar.LENGTH_LONG).
-                    setAction("Choose", (v) -> {
                         boolean isCityExist = false;
                         for (int i = 0; i < listCities.size(); i++) {
                             isCityExist = listCities.get(i).equals(city);
@@ -165,7 +163,6 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
                         }
                         currentPosition = listCities.indexOf(city);
                         showWeather();
-                    }).show();
         }
     }
 
