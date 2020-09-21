@@ -60,6 +60,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         makeDecorator();
         setUpRecyclerView();
     }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
@@ -101,7 +102,6 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
 
         setOnInputCityClickListener();
         setOnBtnClickListener();
-
 
         isExistWeather = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
@@ -192,8 +192,9 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
             WeatherFragment detail = (WeatherFragment)
                     requireFragmentManager().findFragmentById(R.id.weather);
 
-            if (detail == null || detail.getIndex() != currentPosition) {
+            if (detail == null || !detail.getCityName().equals(city)) {
 
+                getWeatherContainer();
                 detail = WeatherFragment.create(getWeatherContainer());
                 setUpRecyclerView();
 
@@ -206,15 +207,14 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         } else {
             Intent intent = new Intent();
             intent.setClass(requireActivity(), WeatherActivity.class);
-            intent.putExtra("index", getWeatherContainer());
+            intent.putExtra("cityName", new WeatherContainer(listCities.get(currentPosition)));
             startActivity(intent);
         }
     }
 
     private WeatherContainer getWeatherContainer() {
-        WeatherContainer container = new WeatherContainer();
-        container.position = currentPosition;
-        container.cityName = listCities.get(currentPosition);
+
+        WeatherContainer container = new WeatherContainer(listCities.get(currentPosition));
         return container;
     }
 

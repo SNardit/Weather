@@ -83,6 +83,4 @@ implements NavigationView.OnNavigationItemSelectedListener {
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-
-
 }
