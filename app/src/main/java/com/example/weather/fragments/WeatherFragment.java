@@ -58,31 +58,19 @@ public class WeatherFragment extends Fragment {
         WeatherFragment fragment = new WeatherFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable("index", container);
+        args.putParcelable("cityName", container);
         fragment.setArguments(args);
         return fragment;
     }
 
-    int getIndex() {
-
-        WeatherContainer weatherContainer = (WeatherContainer)
-                (requireArguments().getSerializable("index"));
-
-        try {
-            assert weatherContainer != null;
-            return weatherContainer.position;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
     String getCityName() {
 
-        WeatherContainer weatherContainer = (WeatherContainer)
-                (requireArguments().getSerializable("index"));
+        Bundle bundle = this.getArguments();
         try {
+            assert bundle != null;
+            WeatherContainer weatherContainer = bundle.getParcelable("cityName");
             assert weatherContainer != null;
-            return weatherContainer.cityName;
+            return weatherContainer.getCityName();
         } catch (Exception e) {
             return "";
         }
@@ -224,10 +212,10 @@ public class WeatherFragment extends Fragment {
     }
 
     private void setOnBtnInfoCity() {
-            String city = cityTextView.getText().toString();
-            Uri uri = Uri.parse("https://wikipedia.org/wiki/" + city);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+        String city = cityTextView.getText().toString();
+        Uri uri = Uri.parse("https://wikipedia.org/wiki/" + city);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 
     private void setOnBtnInfoDevelop() {

@@ -1,5 +1,7 @@
 package com.example.weather;
 
+import android.util.Log;
+
 import com.example.weather.modelForLocation.WeatherRequest;
 import com.example.weather.modelOneCallWeather.OneCallRequest;
 import com.google.gson.Gson;
@@ -9,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -31,6 +34,8 @@ public class CheckWeather {
         return oneCallRequest;
     }
 
+    private static final String TAG = "CheckWeatherActivity";
+
     public void getCoordCity (String city) {
         try {
             final URL uri = new URL(WEATHER_URL + city + WEATHER_URL_METRIC + APP_ID);
@@ -46,14 +51,14 @@ public class CheckWeather {
                 weatherRequest = gson.fromJson(result, WeatherRequest.class);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "error: " + e.getMessage());
             } finally {
                 if (null != urlConnection) {
                     urlConnection.disconnect();
                 }
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error: " + e.getMessage());;
         }
     }
 
@@ -74,14 +79,14 @@ public class CheckWeather {
                 oneCallRequest = gson.fromJson(result, OneCallRequest.class);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "error: " + e.getMessage());
             } finally {
                 if (null != urlConnection) {
                     urlConnection.disconnect();
                 }
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error: " + e.getMessage());
         }
     }
 
@@ -95,13 +100,13 @@ public class CheckWeather {
                 if (tempVariable == null) break;
                 rawData.append(tempVariable).append("\n");
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "error: " + e.getMessage());
             }
         }
         try {
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error: " + e.getMessage());
         }
         return rawData.toString();
     }
