@@ -30,4 +30,6 @@
     <string name="day_of_week">dayOfWeek</string>
     <string name="NoteAboutCityDontExistInHistory">is not in your forecast history</string>
     <string name="phone">000-000-00-00</string>
+    <string name="connection_error_or_and_city_is_not_exist">Connection error or/and city is not exist!</string>
+    <string name="ok">OK</string>
 </resources>

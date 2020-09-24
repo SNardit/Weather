@@ -1,6 +1,7 @@
 package com.example.weather.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,6 +55,8 @@ public class WeatherFragment extends Fragment {
     private RecyclerView recyclerViewDays;
     private RecyclerDataAdapterWeatherByDays adapterWeatherByDays;
     private ArrayList<WeatherByDays> weatherByDays = new ArrayList<>();
+
+    private DialogBuilderFragment dlgBuilder;
 
     static WeatherFragment create(WeatherContainer container) {
         WeatherFragment fragment = new WeatherFragment();
@@ -93,6 +97,7 @@ public class WeatherFragment extends Fragment {
         String cityName = getCityName();
         cityTextView.setText(cityName);
         setDate();
+        dlgBuilder = new DialogBuilderFragment();
         setCurrentWeather();
     }
 
@@ -133,8 +138,9 @@ public class WeatherFragment extends Fragment {
             CheckWeather checkWeather = new CheckWeather();
             checkWeather.getCoordCity(getCityName());
             if (checkWeather.getWeatherRequest() == null) {
-                Snackbar.make(cityTextView, "Choose entered city?", Snackbar.LENGTH_LONG).
-                        setText("Connection error or/and city is not exist!").show();
+                dlgBuilder.show(getActivity().getSupportFragmentManager(), "dialogBuilder");
+               /* Snackbar.make(cityTextView, "Choose entered city?", Snackbar.LENGTH_LONG).
+                        //setText("Connection error or/and city is not exist!").show();*/
             }
             else {
                 checkWeather.getCurrentWeather();
