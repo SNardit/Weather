@@ -32,7 +32,7 @@ public class RecyclerDataAdapterWeatherByHours extends RecyclerView.Adapter<Recy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textViewHour.setText(weather.get(position).hour);
-        holder.weatherPic.setImageDrawable(weather.get(position).image);
+        holder.weatherPic.setImageResource(weather.get(position).image);
         holder.textViewWeather.setText(weather.get(position).weather);
     }
 

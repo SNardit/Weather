@@ -32,7 +32,7 @@ public class RecyclerDataAdapterWeatherByDays extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textViewDay.setText(weatherDays.get(position).day);
-        holder.weatherPicDay.setImageDrawable(weatherDays.get(position).image);
+        holder.weatherPicDay.setImageResource(weatherDays.get(position).image);
         holder.textViewDaytimeWeather.setText(weatherDays.get(position).weatherDaytime);
         holder.textViewNighttimeWeather.setText(weatherDays.get(position).weatherNighttime);
     }

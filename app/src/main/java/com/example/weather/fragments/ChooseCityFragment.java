@@ -46,6 +46,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     private int currentPosition = 0;
     private String city;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fillUpArrayListCity();
@@ -184,6 +185,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     }
 
     private void showWeather() {
+
         if (isExistWeather) {
 
             WeatherFragment detail = (WeatherFragment)
