@@ -1,14 +1,15 @@
 package com.example.weather.fragments;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,25 +21,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather.AboutDevelopers;
-import com.example.weather.CheckWeather;
 import com.example.weather.R;
 import com.example.weather.WeatherContainer;
-import com.example.weather.modelOneCallWeather.OneCallRequest;
+import com.example.weather.WeatherService;
 import com.example.weather.recyclerWeatherByDays.RecyclerDataAdapterWeatherByDays;
 import com.example.weather.recyclerWeatherByDays.WeatherByDays;
 import com.example.weather.recyclerWeatherByHours.RecyclerDataAdapterWeatherByHours;
 import com.example.weather.recyclerWeatherByHours.WeatherByHours;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 
 public class WeatherFragment extends Fragment {
@@ -58,6 +54,15 @@ public class WeatherFragment extends Fragment {
 
     private DialogBuilderFragment dlgBuilder;
 
+    public final static String BROADCAST_ACTION = "com.example.weather";
+    public final static String TEMP = "temp";
+    public final static String DESCRIPTION = "description";
+    public final static String DATE = "date";
+    public final static String WEATHER_BY_HOURS = "weatherByHours";
+    public final static String WEATHER_BY_DAYS = "weatherByDays";
+    public final static String NO_CITY = "noCity";
+
+
     static WeatherFragment create(WeatherContainer container) {
         WeatherFragment fragment = new WeatherFragment();
 
@@ -67,7 +72,7 @@ public class WeatherFragment extends Fragment {
         return fragment;
     }
 
-    String getCityName() {
+    public String getCityName() {
 
         Bundle bundle = this.getArguments();
         try {
@@ -85,7 +90,44 @@ public class WeatherFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.weather_fragment, container, false);
 
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        getActivity().registerReceiver(br, intFilt);
+        initNotificationChannel();
+
         return view;
+    }
+
+    private final BroadcastReceiver br = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String temp = intent.getStringExtra(TEMP);
+            String description = intent.getStringExtra(DESCRIPTION);
+            String date = intent.getStringExtra(DATE);
+
+            if (intent.getIntExtra(NO_CITY, -1) == 0) {
+                dlgBuilder.show(getActivity().getSupportFragmentManager(), "dialogBuilder");
+            } else {
+                tempTextView.setText(temp);
+                descriptionTextView.setText(description);
+                dateView.setText(date);
+
+                weatherByHours.addAll(intent.getParcelableArrayListExtra(WEATHER_BY_HOURS));
+                setUpRecyclerViewHours();
+
+                weatherByDays.addAll(intent.getParcelableArrayListExtra(WEATHER_BY_DAYS));
+                setUpRecyclerViewDays();
+            }
+
+        }
+    };
+
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel mChannel = new NotificationChannel("2", "name", importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
     }
 
     @Override
@@ -98,7 +140,13 @@ public class WeatherFragment extends Fragment {
         cityTextView.setText(cityName);
         setDate();
         dlgBuilder = new DialogBuilderFragment();
-        setCurrentWeather();
+        getWeatherData();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(br);
     }
 
     @Override
@@ -132,58 +180,10 @@ public class WeatherFragment extends Fragment {
         return false;
     }
 
-    private void setCurrentWeather() {
-        final Handler handler = new Handler(Looper.getMainLooper());
-        new Thread((Runnable) () -> {
-            CheckWeather checkWeather = new CheckWeather();
-            checkWeather.getCoordCity(getCityName());
-            if (checkWeather.getWeatherRequest() == null) {
-                dlgBuilder.show(getActivity().getSupportFragmentManager(), "dialogBuilder");
-               /* Snackbar.make(cityTextView, "Choose entered city?", Snackbar.LENGTH_LONG).
-                        //setText("Connection error or/and city is not exist!").show();*/
-            }
-            else {
-                checkWeather.getCurrentWeather();
-                handler.post(() -> displayWeather(checkWeather.getOneCallRequest()));
-            }
-        }).start();
-    }
+    private void getWeatherData() {
+        Intent intent = new Intent(getActivity(), WeatherService.class);
+        getActivity().startService(intent.putExtra("city", getCityName()));
 
-    public void displayWeather(OneCallRequest oneCallRequest) {
-        int seconds = oneCallRequest.getTimezone_offset();
-
-        String temperatureValue = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getCurrent().getTemp()) + "ºC";
-        tempTextView.setText(temperatureValue);
-
-        String descriptionText =  String.format(Locale.getDefault(), "%s", oneCallRequest.getCurrent().getWeather()[0].getDescription());
-        descriptionTextView.setText(descriptionText);
-
-        Date date = new Date((oneCallRequest.getCurrent().getDt() + seconds) * 1000);
-        dateView.setText(makeDateFormat(date, "dd MMMM yyyy, EEEE"));
-
-        for (int i = 0; i < 12; i++) {
-            Date hourDate = new Date((oneCallRequest.getHourly()[i].getDt() + seconds) * 1000);
-            String hour = makeDateFormat(hourDate, "HH");
-            @SuppressLint("UseCompatLoadingForDrawables") Drawable pic = getResources().getDrawable(R.drawable.sunny);
-            String temp = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getHourly()[i].getTemp()) + "ºC";
-            weatherByHours.add(new WeatherByHours(hour, pic, temp));
-        }
-        setUpRecyclerViewHours();
-
-        for (int i = 0; i < 3; i++) {
-            Date dayDate = new Date((oneCallRequest.getDaily()[i].getDt() + seconds) * 1000);
-            String day = makeDateFormat(dayDate, "EEEE");
-            @SuppressLint("UseCompatLoadingForDrawables") Drawable pic = getResources().getDrawable(R.drawable.cloudy);
-            String daytime = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getDaily()[i].getTemp().getDay()) + "ºC";
-            String nighttime = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getDaily()[i].getTemp().getNight()) + "ºC";
-            weatherByDays.add(new WeatherByDays(day, pic, daytime, nighttime));
-        }
-        setUpRecyclerViewDays();
-    }
-
-    private String makeDateFormat (Date date, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        return sdf.format(date);
     }
 
     private void initView(View view) {

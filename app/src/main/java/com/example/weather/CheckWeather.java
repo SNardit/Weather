@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -58,7 +57,7 @@ public class CheckWeather {
                 }
             }
         } catch (MalformedURLException e) {
-            Log.e(TAG, "error: " + e.getMessage());;
+            Log.e(TAG, "error: " + e.getMessage());
         }
     }
 
