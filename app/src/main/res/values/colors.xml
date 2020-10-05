@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#A02E09</color>
     <color name="colorAccent">#C62828</color>
     <color name="background">#286FE4</color>
+    <color name="backgroundTrans">#348F98A6</color>
     <color name="backgroundLight">#B43B75D3</color>
     <color name="textCityColor">#FFC9BF</color>
 

@@ -1,7 +1,5 @@
 package com.example.weather.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +21,7 @@ public class DialogBuilderFragment extends BottomSheetDialogFragment {
 
         setCancelable(false);
 
-        view.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        view.findViewById(R.id.btnOk).setOnClickListener(view1 -> dismiss());
 
         return view;
     }

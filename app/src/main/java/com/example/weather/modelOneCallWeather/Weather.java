@@ -1,9 +1,18 @@
 package com.example.weather.modelOneCallWeather;
 
 public class Weather {
+
+    private Integer id;
     private String main;
     private String description;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     public String getMain() {
         return main;
     }
