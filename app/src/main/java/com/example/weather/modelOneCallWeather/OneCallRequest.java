@@ -1,7 +1,5 @@
 package com.example.weather.modelOneCallWeather;
 
-import java.util.TimeZone;
-
 public class OneCallRequest {
     private String timezone;
     private int timezone_offset;

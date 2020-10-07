@@ -30,5 +30,14 @@
         <item>23ºC</item>
     </string-array>
 
+    <string-array name="pic_for_background">
+        <item name="Thunderstorm"> "https://images.unsplash.com/photo-1598887790298-ff87be733362?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60" </item>
+        <item name="Drizzle"> https://images.unsplash.com/photo-1508873760731-9c3d0bb6b961?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60 </item>
+        <item name="Rain"> https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60 </item>
+        <item name="Snow"> https://images.unsplash.com/photo-1514030849962-49ac486d3d20?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjExMzk2fQ&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60 </item>
+        <item name="Mist"> https://images.unsplash.com/photo-1574619150954-daa4c5ffad57?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60 </item>
+        <item name="Clear"> https://images.unsplash.com/photo-1522011916481-b7f27c0bf69b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60 </item>
+        <item name="Clouds"> https://images.unsplash.com/photo-1500835176302-48dbd01f6437?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60 </item>
+    </string-array>
 
 </resources>

@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,8 +33,10 @@ import com.example.weather.recyclerWeatherByDays.RecyclerDataAdapterWeatherByDay
 import com.example.weather.recyclerWeatherByDays.WeatherByDays;
 import com.example.weather.recyclerWeatherByHours.RecyclerDataAdapterWeatherByHours;
 import com.example.weather.recyclerWeatherByHours.WeatherByHours;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -42,7 +45,9 @@ public class WeatherFragment extends Fragment {
     private TextView dateView;
     private TextView tempTextView;
     private TextView descriptionTextView;
-
+    private ImageView backgroundView;
+    private ArrayList<String> picWeatherArray;
+    private Integer arrayPosition = null;
 
     private RecyclerView recyclerViewHours;
     private RecyclerDataAdapterWeatherByHours adapterWeatherByHours;
@@ -56,6 +61,7 @@ public class WeatherFragment extends Fragment {
 
     public final static String BROADCAST_ACTION = "com.example.weather";
     public final static String TEMP = "temp";
+    public final static String ID = "id";
     public final static String DESCRIPTION = "description";
     public final static String DATE = "date";
     public final static String WEATHER_BY_HOURS = "weatherByHours";
@@ -101,6 +107,16 @@ public class WeatherFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String temp = intent.getStringExtra(TEMP);
+            Integer id = intent.getIntExtra(ID, 0);
+            arrayPosition = getPicById(id);
+
+            if (arrayPosition != null) {
+                Picasso.get()
+                        .load(picWeatherArray.get(arrayPosition))
+                        .into(backgroundView);
+            }
+
+
             String description = intent.getStringExtra(DESCRIPTION);
             String date = intent.getStringExtra(DATE);
 
@@ -191,8 +207,10 @@ public class WeatherFragment extends Fragment {
         dateView = view.findViewById(R.id.textViewDate);
         tempTextView = view.findViewById(R.id.textViewTemperature);
         descriptionTextView = view.findViewById(R.id.textViewDescription);
+        backgroundView = view.findViewById(R.id.background);
         recyclerViewHours = view.findViewById(R.id.recyclerViewWeatherHour);
         recyclerViewDays = view.findViewById(R.id.recyclerViewWeatherDay);
+        picWeatherArray = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.pic_for_background)));
     }
 
     private void setDate() {
@@ -228,6 +246,17 @@ public class WeatherFragment extends Fragment {
         Intent intent = new Intent();
         intent.setClass(requireActivity(), AboutDevelopers.class);
         startActivity(intent);
+    }
+
+    private Integer getPicById (Integer id) {
+        if (id >= 200 && id < 300) { arrayPosition = 0; }
+        else if (id >= 300 && id < 400) { arrayPosition = 1; }
+        else if (id >= 500 && id < 600) { arrayPosition = 2; }
+        else if (id >= 600 && id < 700) { arrayPosition = 3; }
+        else if (id >= 700 && id < 800) { arrayPosition = 4; }
+        else if (id == 800) { arrayPosition = 5; }
+        else if (id > 800 && id <= 804) { arrayPosition = 6; }
+        return arrayPosition;
     }
 
 }
