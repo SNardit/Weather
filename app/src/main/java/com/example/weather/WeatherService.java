@@ -39,7 +39,7 @@ public class WeatherService extends IntentService {
     }
 
     public void displayWeather(OneCallRequest oneCallRequest) {
-        int seconds = oneCallRequest.getTimezone_offset();
+        int seconds = oneCallRequest.getTimezoneOffset();
 
         Intent intent = new Intent(WeatherFragment.BROADCAST_ACTION);
 

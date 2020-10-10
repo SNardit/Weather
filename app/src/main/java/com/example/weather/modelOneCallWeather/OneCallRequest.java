@@ -2,7 +2,7 @@ package com.example.weather.modelOneCallWeather;
 
 public class OneCallRequest {
     private String timezone;
-    private int timezone_offset;
+    private int timezoneOffset;
     private Current current;
     private Hourly[] hourly;
     private Daily[] daily;
@@ -15,12 +15,12 @@ public class OneCallRequest {
         this.timezone = timezone;
     }
 
-    public int getTimezone_offset() {
-        return timezone_offset;
+    public int getTimezoneOffset() {
+        return timezoneOffset;
     }
 
-    public void setTimezone_offset(int timezone_offset) {
-        this.timezone_offset = timezone_offset;
+    public void setTimezoneOffset(int timezoneOffset) {
+        this.timezoneOffset = timezoneOffset;
     }
 
     public Current getCurrent() {

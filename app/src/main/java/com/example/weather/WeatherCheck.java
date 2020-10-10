@@ -5,6 +5,8 @@ import android.util.Log;
 import com.example.weather.modelForLocation.WeatherRequest;
 import com.example.weather.modelOneCallWeather.OneCallRequest;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,19 +22,32 @@ public class WeatherCheck {
     private Float lat;
     private Float lon;
 
-    public void initRetrofit () {
+    public void initLog(){
+
+    }
+
+    public void initRetrofit() {
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+
         Retrofit retrofit;
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
         openWeather = retrofit.create(OpenWeather.class);
+        
     }
 
     public void requestRetrofitForCoord (String city, OnResponseCompletedWeatherRequest listener) {
         openWeather.loadCoord(city, "metric", APP_ID).
                 enqueue(new Callback<WeatherRequest>() {
-
                 @Override
                 public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
 
@@ -63,7 +78,7 @@ public class WeatherCheck {
 
                     @Override
                     public void onFailure(Call<OneCallRequest> call, Throwable t) {
-
+                        Log.e(TAG, "error: " + t.getMessage());
                     }
                 });
     }
