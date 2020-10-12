@@ -9,16 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather.R;
+import com.example.weather.WeatherSource;
+import com.example.weather.modelDataBase.City;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerDataAdapterChooseCity extends RecyclerView.Adapter<RecyclerDataAdapterChooseCity.ViewHolder> {
-    private ArrayList<String> cities;
+
+    private WeatherSource dataSource;
     private IRVOnItemClick onItemClickChooseCity;
 
-    public RecyclerDataAdapterChooseCity(ArrayList<String> cities, IRVOnItemClick onItemClickChooseCity) {
-        this.cities = cities;
+    public RecyclerDataAdapterChooseCity(WeatherSource dataSource, IRVOnItemClick onItemClickChooseCity){
+        this.dataSource = dataSource;
         this.onItemClickChooseCity = onItemClickChooseCity;
+
     }
 
     @NonNull
@@ -30,36 +34,40 @@ public class RecyclerDataAdapterChooseCity extends RecyclerView.Adapter<Recycler
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String text = cities.get(position);
+        List<City> cities = dataSource.getCities();
 
-        holder.setTextToTextView(text);
-        holder.setOnClickForItem(text);
+        City city = cities.get(position);
+
+        holder.cityNameView.setText(city.cityName);
+        holder.cityDateView.setText(city.date);
+        holder.cityWeatherView.setText(city.weather);
+        holder.setOnClickForItem(city.cityName);
     }
 
     @Override
     public int getItemCount() {
-        return cities == null ? 0 : cities.size();
+        return (int) dataSource.getCountCities();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        TextView cityNameView;
+        TextView cityDateView;
+        TextView cityWeatherView;
 
         public ViewHolder (@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.cityTextView);
+            cityNameView = itemView.findViewById(R.id.cityTextView);
+            cityDateView = itemView.findViewById(R.id.dateTextView);
+            cityWeatherView = itemView.findViewById(R.id.weatherTextView);
         }
 
-        void setTextToTextView(String text) {
-            textView.setText(text);
-        }
-
-        void setOnClickForItem(final String text) {
-            textView.setOnClickListener(view -> {
+        void setOnClickForItem(final String city) {
+            itemView.setOnClickListener(view -> {
                 if(onItemClickChooseCity != null) {
-                    onItemClickChooseCity.onItemClick(text);
+                    onItemClickChooseCity.onItemClick(city);
                 }
             });
         }
-    }
 
+    }
 }
