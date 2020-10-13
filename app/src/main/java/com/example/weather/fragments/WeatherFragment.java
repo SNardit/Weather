@@ -6,10 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +51,8 @@ public class WeatherFragment extends Fragment {
     private ArrayList<String> picWeatherArray;
     private Integer arrayPosition = null;
 
+    private static final String TAG = "WeatherFragment";
+
     private RecyclerView recyclerViewHours;
     private RecyclerDataAdapterWeatherByHours adapterWeatherByHours;
     private ArrayList<WeatherByHours> weatherByHours = new ArrayList<>();
@@ -64,6 +68,7 @@ public class WeatherFragment extends Fragment {
     public final static String ID = "id";
     public final static String DESCRIPTION = "description";
     public final static String DATE = "date";
+    public final static String DATE_HISTORY = "date";
     public final static String WEATHER_BY_HOURS = "weatherByHours";
     public final static String WEATHER_BY_DAYS = "weatherByDays";
     public final static String NO_CITY = "noCity";
@@ -119,13 +124,21 @@ public class WeatherFragment extends Fragment {
 
             String description = intent.getStringExtra(DESCRIPTION);
             String date = intent.getStringExtra(DATE);
+            String dateHistory = intent.getStringExtra(DATE_HISTORY);
 
             if (intent.getIntExtra(NO_CITY, -1) == 0) {
                 dlgBuilder.show(getActivity().getSupportFragmentManager(), "dialogBuilder");
             } else {
+
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("Current position", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putLong("currentId", ChooseCityFragment.getCurrentPosition());
+                editor.apply();
                 tempTextView.setText(temp);
                 descriptionTextView.setText(description);
                 dateView.setText(date);
+                ChooseCityFragment.weatherSource.updateCityDateByCityName(getCityName(), dateHistory);
+                ChooseCityFragment.weatherSource.updateCityWeatherByCityName(getCityName(), temp);
 
                 weatherByHours.addAll(intent.getParcelableArrayListExtra(WEATHER_BY_HOURS));
                 setUpRecyclerViewHours();
@@ -162,7 +175,11 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().unregisterReceiver(br);
+        try{
+            requireActivity().unregisterReceiver(br);
+        }catch (Exception e){
+            Log.d(TAG, e.getMessage());
+        }
     }
 
     @Override
@@ -257,6 +274,12 @@ public class WeatherFragment extends Fragment {
         else if (id == 800) { arrayPosition = 5; }
         else if (id > 800 && id <= 804) { arrayPosition = 6; }
         return arrayPosition;
+    }
+
+    @Override
+    public void onDetach() {
+        ChooseCityFragment.weatherSource.removeCityWithNullWeather();
+        super.onDetach();
     }
 
 }

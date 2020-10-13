@@ -1,6 +1,8 @@
 package com.example.weather.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,9 +23,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather.AboutDevelopers;
+import com.example.weather.App;
 import com.example.weather.R;
 import com.example.weather.WeatherActivity;
 import com.example.weather.WeatherContainer;
+import com.example.weather.WeatherSource;
+import com.example.weather.dao.WeatherDao;
+import com.example.weather.modelDataBase.City;
 import com.example.weather.recyclerChooseCity.IRVOnItemClick;
 import com.example.weather.recyclerChooseCity.RecyclerDataAdapterChooseCity;
 import com.google.android.material.button.MaterialButton;
@@ -31,25 +37,27 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     private RecyclerView recyclerView;
     private RecyclerDataAdapterChooseCity adapterChooseCity;
-    private ArrayList<String> listCities;
     private TextInputEditText searchCity;
     private MaterialButton searchButton;
 
     private boolean isExistWeather;
-    private int currentPosition = 0;
+
+    private static long currentPosition = 1;
     private String city;
 
+    public static WeatherSource weatherSource;
+
+    public static long getCurrentPosition() {
+        return currentPosition;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fillUpArrayListCity();
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.choose_city_fragment, container, false);
     }
@@ -60,6 +68,8 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         initView(view);
         makeDecorator();
         setUpRecyclerView();
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Current position", Context.MODE_PRIVATE);
+        currentPosition = sharedPreferences.getLong("currentId", 1);
     }
 
     @Override
@@ -107,8 +117,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         isExistWeather = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getInt("Current city", 0);
-            listCities = savedInstanceState.getStringArrayList("Cities list");
+            currentPosition = savedInstanceState.getLong("Current city", 1);
             setUpRecyclerView();
         }
 
@@ -119,14 +128,10 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putStringArrayList("Cities list", listCities);
-        outState.putInt("Current city", currentPosition);
+        outState.putLong("Current city", currentPosition);
         super.onSaveInstanceState(outState);
     }
 
-    private void fillUpArrayListCity() {
-        listCities = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.cities)));
-    }
 
     private void initView(View view) {
         searchCity = view.findViewById(R.id.inputCityText);
@@ -134,11 +139,17 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         recyclerView = view.findViewById(R.id.recyclerView);
     }
 
-    private void setUpRecyclerView() {
+    public void setUpRecyclerView() {
+        recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        adapterChooseCity = new RecyclerDataAdapterChooseCity(listCities, this);
-
         recyclerView.setLayoutManager(layoutManager);
+
+        WeatherDao weatherDao = App
+                .getInstance()
+                .getWeatherDao();
+        weatherSource = new WeatherSource(weatherDao);
+
+        adapterChooseCity = new RecyclerDataAdapterChooseCity(weatherSource, this::onItemClick);
         recyclerView.setAdapter(adapterChooseCity);
     }
 
@@ -154,33 +165,35 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         city = Objects.requireNonNull(searchCity.getText()).toString();
         if (!city.matches("")) {
 
-                        boolean isCityExist = false;
-                        for (int i = 0; i < listCities.size(); i++) {
-                            isCityExist = listCities.get(i).equals(city);
-                            if (isCityExist) break;
-                        }
-                        if (!isCityExist) {
-                            listCities.add(city);
-                        }
-                        currentPosition = listCities.indexOf(city);
-                        showWeather();
+            boolean isCityExist = false;
+            for (int i = 0; i < weatherSource.getCountCities(); i++) {
+                isCityExist = weatherSource.getCities().get(i).cityName.equals(city);
+                if (isCityExist) break;
+            }
+            if (!isCityExist) {
+                City cityName= new City();
+                cityName.cityName = city;
+                weatherSource.addCity(cityName);
+            }
+            currentPosition = getPosition(city);
+            showWeather();
         }
     }
 
     private void actionForSearchCityFromMainMenu(String city, View search) {
         if (!city.matches("")) {
 
-                        boolean isCityExist = false;
-                        for (int i = 0; i < listCities.size(); i++) {
-                            isCityExist = listCities.get(i).equals(city);
-                            if (isCityExist) break;
-                        }
-                        if (isCityExist) {
-                            currentPosition = listCities.indexOf(city);
-                            showWeather();
-                        } else {
-                            Snackbar.make(search, city + getString(R.string.NoteAboutCityDontExistInHistory), BaseTransientBottomBar.LENGTH_LONG).show();
-                        }
+            boolean isCityExist = false;
+            for (int i = 0; i < weatherSource.getCountCities(); i++) {
+                isCityExist = weatherSource.getCities().get(i).cityName.equals(city);
+                if (isCityExist) break;
+            }
+            if (isCityExist) {
+                currentPosition = getPosition(city);
+                showWeather();
+            } else {
+                Snackbar.make(search, city + getString(R.string.NoteAboutCityDontExistInHistory), BaseTransientBottomBar.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -188,13 +201,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
 
         if (isExistWeather) {
 
-            WeatherFragment detail = (WeatherFragment)
-                    requireFragmentManager().findFragmentById(R.id.weather);
-
-            if (detail == null || !detail.getCityName().equals(city)) {
-
-                getWeatherContainer();
-                detail = WeatherFragment.create(getWeatherContainer());
+                WeatherFragment detail = WeatherFragment.create(getWeatherContainer());
                 setUpRecyclerView();
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -202,25 +209,31 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack("Some key");
                 ft.commit();
-            }
         } else {
             Intent intent = new Intent();
             intent.setClass(requireActivity(), WeatherActivity.class);
-            intent.putExtra("cityName", new WeatherContainer(listCities.get(currentPosition)));
+            intent.putExtra("cityName", getWeatherContainer());
             startActivity(intent);
         }
     }
 
     private WeatherContainer getWeatherContainer() {
-
-        WeatherContainer container = new WeatherContainer(listCities.get(currentPosition));
+        WeatherContainer container = new WeatherContainer(getCityByCurrentPosition(currentPosition));
         return container;
     }
 
     @Override
-    public void onItemClick(String itemText) {
-        currentPosition = listCities.indexOf(itemText);
+    public void onItemClick(String city) {
+        currentPosition = getPosition(city);
         showWeather();
+    }
+
+    private long getPosition(String city) {
+        return weatherSource.getIdByCityName(city);
+    }
+
+    private String getCityByCurrentPosition(long id) {
+        return weatherSource.getCityNameById(id);
     }
 
     private void makeDecorator() {

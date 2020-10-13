@@ -19,7 +19,7 @@ public class DialogBuilderFragment extends BottomSheetDialogFragment {
 
         View view = inflater.inflate(R.layout.fragment_dialog, container, false);
 
-        setCancelable(false);
+        setCancelable(true);
 
         view.findViewById(R.id.btnOk).setOnClickListener(view1 -> dismiss());
 

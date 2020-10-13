@@ -56,6 +56,9 @@ public class WeatherService extends IntentService {
         String dateFormat = makeDateFormat(date, "dd MMMM yyyy, EEEE");
         intent.putExtra(WeatherFragment.DATE, dateFormat);
 
+        String dateFormatHistory = makeDateFormat(date, "d MMM yy");
+        intent.putExtra(WeatherFragment.DATE_HISTORY, dateFormatHistory);
+
 
         ArrayList<WeatherByHours> weatherByHours = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
