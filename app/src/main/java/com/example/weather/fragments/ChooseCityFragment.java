@@ -45,6 +45,9 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     private TextInputEditText searchCity;
     private MaterialButton searchButton;
 
+    private static final String CURRENT_POSITION = "Current position";
+    private static final String CURRENT_ID = "currentId";
+
     private boolean isExistWeather;
 
     private static long currentPosition = 1;
@@ -68,8 +71,8 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         initView(view);
         makeDecorator();
         setUpRecyclerView();
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Current position", Context.MODE_PRIVATE);
-        currentPosition = sharedPreferences.getLong("currentId", 1);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(CURRENT_POSITION, Context.MODE_PRIVATE);
+        currentPosition = sharedPreferences.getLong(CURRENT_ID, 1);
     }
 
     @Override

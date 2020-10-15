@@ -23,19 +23,19 @@ public interface WeatherDao {
     @Delete
     void deleteCity(City city);
 
-    @Query("UPDATE city SET date =  :date WHERE city_name = :city_name")
+    @Query("UPDATE city SET date  = :date WHERE city_name = :city_name")
     void updateCityDateByCityName(String city_name, String date);
 
-    @Query("UPDATE city SET weather =  :weather WHERE city_name = :city_name")
+    @Query("UPDATE city SET weather = :weather WHERE city_name = :city_name")
     void updateCityWeatherByCityName(String city_name, String weather);
 
     @Query("DELETE FROM city WHERE city_name = :city_name")
     void deleteCityByCityName(String city_name);
 
-    @Query("SELECT * FROM city")
+    @Query("SELECT id, city_name, date, weather FROM city")
     List<City> getAllCities();
 
-    @Query("SELECT * FROM city WHERE id = :id")
+    @Query("SELECT id, city_name FROM city WHERE id = :id")
     City getCityById(long id);
 
     @Query("SELECT id FROM city WHERE city_name = :city_name")

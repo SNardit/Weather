@@ -22,12 +22,32 @@
             </intent-filter>
         </activity>
         <activity android:name=".WeatherActivity" />
+        <receiver
+            android:name=".ChangeConnectionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".FirebaseMessageService">
+            <intent-filter>
+                <action
+                    android:name="com.google.firebase.MESSAGE_EVENT"/>
+            </intent-filter>
+        </service>
 
         <service
             android:name=".WeatherService"
             android:enabled="true"
             android:exported="true" />
     </application>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
