@@ -22,10 +22,6 @@ public class WeatherCheck {
     private Float lat;
     private Float lon;
 
-    public void initLog(){
-
-    }
-
     public void initRetrofit() {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

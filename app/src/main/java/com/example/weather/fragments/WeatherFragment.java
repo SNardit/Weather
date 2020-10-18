@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,20 +37,16 @@ import com.example.weather.recyclerWeatherByDays.RecyclerDataAdapterWeatherByDay
 import com.example.weather.recyclerWeatherByDays.WeatherByDays;
 import com.example.weather.recyclerWeatherByHours.RecyclerDataAdapterWeatherByHours;
 import com.example.weather.recyclerWeatherByHours.WeatherByHours;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 
 public class WeatherFragment extends Fragment {
-
-    private String cityName;
 
     private TextView cityTextView;
     private TextView dateView;
@@ -60,13 +57,12 @@ public class WeatherFragment extends Fragment {
     private Integer arrayPosition = null;
 
     private static final String TAG = "WeatherFragment";
+    private int messageId = 100;
 
     private RecyclerView recyclerViewHours;
-    private RecyclerDataAdapterWeatherByHours adapterWeatherByHours;
     private ArrayList<WeatherByHours> weatherByHours = new ArrayList<>();
 
     private RecyclerView recyclerViewDays;
-    private RecyclerDataAdapterWeatherByDays adapterWeatherByDays;
     private ArrayList<WeatherByDays> weatherByDays = new ArrayList<>();
 
     private DialogBuilderFragment dlgBuilder;
@@ -74,16 +70,20 @@ public class WeatherFragment extends Fragment {
     private static final String CURRENT_POSITION = "Current position";
     private static final String CURRENT_ID = "currentId";
 
+    private static Float latitude;
+    private static Float longitude;
+
     public final static String BROADCAST_ACTION = "com.example.weather";
     public final static String TEMP = "temp";
     public final static String ID = "id";
     public final static String DESCRIPTION = "description";
     public final static String DATE = "date";
-    public final static String DATE_HISTORY = "date";
+    public final static String DATE_HISTORY = "dateHistory";
     public final static String WEATHER_BY_HOURS = "weatherByHours";
     public final static String WEATHER_BY_DAYS = "weatherByDays";
     public final static String NO_CITY = "noCity";
-
+    public final static String CITY_NAME = "cityName";
+    public final static String WARNING_TEMPERATURE = "warningTemperature";
 
 
     static WeatherFragment create(WeatherContainer container) {
@@ -91,6 +91,15 @@ public class WeatherFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putParcelable("cityName", container);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    static WeatherFragment create(Float lat, Float lng) {
+        WeatherFragment fragment = new WeatherFragment();
+        Bundle args = new Bundle();
+        args.putFloat("lat", lat);
+        args.putFloat("lng", lng);
         fragment.setArguments(args);
         return fragment;
     }
@@ -108,13 +117,35 @@ public class WeatherFragment extends Fragment {
         }
     }
 
+    public Float getLatitude() {
+
+        Bundle bundle = this.getArguments();
+        try {
+            assert bundle != null;
+            return bundle.getFloat("lat");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Float getLongitude() {
+
+        Bundle bundle = this.getArguments();
+        try {
+            assert bundle != null;
+            return bundle.getFloat("lng");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.weather_fragment, container, false);
 
         IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
-        getActivity().registerReceiver(br, intFilt);
+        requireActivity().registerReceiver(br, intFilt);
         initNotificationChannel();
 
         return view;
@@ -137,25 +168,34 @@ public class WeatherFragment extends Fragment {
             String description = intent.getStringExtra(DESCRIPTION);
             String date = intent.getStringExtra(DATE);
             String dateHistory = intent.getStringExtra(DATE_HISTORY);
+            String cityName = intent.getStringExtra(CITY_NAME);
+            String warningTemperature = intent.getStringExtra(WARNING_TEMPERATURE);
 
             if (intent.getIntExtra(NO_CITY, -1) == 0) {
-                dlgBuilder.show(getActivity().getSupportFragmentManager(), "dialogBuilder");
+                dlgBuilder.show(requireActivity().getSupportFragmentManager(), "dialogBuilder");
             } else {
 
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(CURRENT_POSITION, Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences(CURRENT_POSITION, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putLong(CURRENT_ID, ChooseCityFragment.getCurrentPosition());
                 editor.apply();
+
+                if (cityName != null) {
+                    cityTextView.setText(cityName);
+                }
+                if (warningTemperature != null) {
+                    notification(warningTemperature);
+                }
                 tempTextView.setText(temp);
                 descriptionTextView.setText(description);
                 dateView.setText(date);
                 ChooseCityFragment.weatherSource.updateCityDateByCityName(cityName, dateHistory);
                 ChooseCityFragment.weatherSource.updateCityWeatherByCityName(cityName, temp);
 
-                weatherByHours.addAll(intent.getParcelableArrayListExtra(WEATHER_BY_HOURS));
+                weatherByHours.addAll(Objects.requireNonNull(intent.getParcelableArrayListExtra(WEATHER_BY_HOURS)));
                 setUpRecyclerViewHours();
 
-                weatherByDays.addAll(intent.getParcelableArrayListExtra(WEATHER_BY_DAYS));
+                weatherByDays.addAll(Objects.requireNonNull(intent.getParcelableArrayListExtra(WEATHER_BY_DAYS)));
                 setUpRecyclerViewDays();
             }
 
@@ -167,24 +207,30 @@ public class WeatherFragment extends Fragment {
         final EditText textToken = view.findViewById(R.id.textToken);
 
         FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("PushMessage", "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        String token = task.getResult().getToken();
-                        textToken.setText(token);
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("PushMessage", "getInstanceId failed", task.getException());
+                        return;
                     }
+
+                    String token = Objects.requireNonNull(task.getResult()).getToken();
+                    textToken.setText(token);
                 });
     }
 
+    private void notification (String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), "2")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Weather notification")
+                .setContentText(message);
+        NotificationManager notificationManager =
+                (NotificationManager) requireContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(messageId++, builder.build());
+    }
 
     private void initNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) requireActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel mChannel = new NotificationChannel("2", "name", importance);
             notificationManager.createNotificationChannel(mChannel);
@@ -198,7 +244,9 @@ public class WeatherFragment extends Fragment {
         initGetToken(view);
         setUpRecyclerViewHours();
         setUpRecyclerViewDays();
-        cityName = getCityName();
+        String cityName = getCityName();
+        latitude = getLatitude();
+        longitude = getLongitude();
         cityTextView.setText(cityName);
         setDate();
         dlgBuilder = new DialogBuilderFragment();
@@ -248,8 +296,13 @@ public class WeatherFragment extends Fragment {
 
     private void getWeatherData() {
         Intent intent = new Intent(getActivity(), WeatherService.class);
-        getActivity().startService(intent.putExtra("city", getCityName()));
-
+        if (latitude != 0.0 && longitude != 0.0) {
+            intent.putExtra("lat", latitude);
+            intent.putExtra("lng", longitude);
+            requireActivity().startService(intent);
+        } else {
+            requireActivity().startService(intent.putExtra("city", getCityName()));
+        }
     }
 
     private void initView(View view) {
@@ -271,7 +324,7 @@ public class WeatherFragment extends Fragment {
 
     private void setUpRecyclerViewHours() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        adapterWeatherByHours = new RecyclerDataAdapterWeatherByHours(weatherByHours);
+        RecyclerDataAdapterWeatherByHours adapterWeatherByHours = new RecyclerDataAdapterWeatherByHours(weatherByHours);
 
         recyclerViewHours.setLayoutManager(layoutManager);
         recyclerViewHours.setAdapter(adapterWeatherByHours);
@@ -279,7 +332,7 @@ public class WeatherFragment extends Fragment {
 
     private void setUpRecyclerViewDays() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        adapterWeatherByDays = new RecyclerDataAdapterWeatherByDays(weatherByDays);
+        RecyclerDataAdapterWeatherByDays adapterWeatherByDays = new RecyclerDataAdapterWeatherByDays(weatherByDays);
 
         recyclerViewDays.setLayoutManager(layoutManager);
         recyclerViewDays.setAdapter(adapterWeatherByDays);

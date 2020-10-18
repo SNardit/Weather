@@ -1,5 +1,6 @@
 package com.example.weather;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 
@@ -18,6 +19,8 @@ import java.util.Locale;
 
 public class WeatherService extends IntentService {
 
+    private String city;
+
     public WeatherService() {
         super("WeatherService");
     }
@@ -26,25 +29,42 @@ public class WeatherService extends IntentService {
     protected void onHandleIntent(@NonNull Intent intent) {
         WeatherCheck weatherCheck = new WeatherCheck();
         weatherCheck.initRetrofit();
-        weatherCheck.requestRetrofitForCoord(intent.getStringExtra("city"), (weatherRequest, lat, lon) -> {
-            if (weatherRequest == null) {
-                Intent noCityIntent = new Intent(WeatherFragment.BROADCAST_ACTION);
-                noCityIntent.putExtra(WeatherFragment.NO_CITY, 0);
-                sendBroadcast(noCityIntent);
-            }
-            else {
-                weatherCheck.requestRetrofitForWeather(lat, lon, oneCallRequest -> displayWeather(oneCallRequest));
-            }
-        });
+        if (intent.getStringExtra("city") != null) {
+            weatherCheck.requestRetrofitForCoord(intent.getStringExtra("city"), (weatherRequest, lat, lon) -> {
+                if (weatherRequest == null) {
+                    Intent noCityIntent = new Intent(WeatherFragment.BROADCAST_ACTION);
+                    noCityIntent.putExtra(WeatherFragment.NO_CITY, 0);
+                    sendBroadcast(noCityIntent);
+                } else {
+                    weatherCheck.requestRetrofitForWeather(lat, lon, this::displayWeather);
+                }
+            });
+        } else {
+            CityNameCheck cityNameCheck = new CityNameCheck();
+            cityNameCheck.initRetrofit();
+            Float lat = intent.getFloatExtra("lat", 0);
+            Float lng = intent.getFloatExtra("lng", 0);
+            cityNameCheck.requestRetrofitForCity(lat, lng, cityName -> {
+                city = cityName;
+                weatherCheck.requestRetrofitForWeather(lat, lng, this::displayWeather);
+            });
+
+        }
     }
 
     public void displayWeather(OneCallRequest oneCallRequest) {
         int seconds = oneCallRequest.getTimezoneOffset();
 
         Intent intent = new Intent(WeatherFragment.BROADCAST_ACTION);
+        intent.putExtra(WeatherFragment.CITY_NAME, city);
 
-        String temp1 = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getCurrent().getTemp()) + "ºC";
-        intent.putExtra(WeatherFragment.TEMP, temp1);
+        String temperature = String.format(Locale.getDefault(), "%.0f", oneCallRequest.getCurrent().getTemp()) + "ºC";
+        intent.putExtra(WeatherFragment.TEMP, temperature);
+
+        float temps = oneCallRequest.getCurrent().getTemp();
+        if (temps < 0) {
+            intent.putExtra(WeatherFragment.WARNING_TEMPERATURE, "Be careful it's very cold outside!!");
+        }
 
         Integer id = oneCallRequest.getCurrent().getWeather()[0].getId();
         intent.putExtra(WeatherFragment.ID, id);
@@ -85,7 +105,7 @@ public class WeatherService extends IntentService {
     }
 
     private String makeDateFormat (Date date, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }
 }

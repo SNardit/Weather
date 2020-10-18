@@ -1,10 +1,14 @@
 package com.example.weather.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather.AboutDevelopers;
 import com.example.weather.App;
+import com.example.weather.GetGeoLocation;
 import com.example.weather.R;
 import com.example.weather.WeatherActivity;
 import com.example.weather.WeatherContainer;
@@ -44,6 +49,13 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     private RecyclerDataAdapterChooseCity adapterChooseCity;
     private TextInputEditText searchCity;
     private MaterialButton searchButton;
+    private MaterialButton findOutWeather;
+
+    public final static String BROADCAST_ACTION = "com.example.weather.fragments";
+    public final static String LATITUDE = "latitude";
+    public final static String LONGITUDE = "longitude";
+
+    private static final String TAG = "ChooseCityFragment";
 
     private static final String CURRENT_POSITION = "Current position";
     private static final String CURRENT_ID = "currentId";
@@ -51,7 +63,8 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     private boolean isExistWeather;
 
     private static long currentPosition = 1;
-    private String city;
+
+    private GetGeoLocation getGeoLocation;
 
     public static WeatherSource weatherSource;
 
@@ -62,8 +75,29 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        requireActivity().registerReceiver(br, intFilt);
         return inflater.inflate(R.layout.choose_city_fragment, container, false);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try{
+            requireActivity().unregisterReceiver(br);
+        }catch (Exception e){
+            Log.d(TAG, "failed", e);
+        }
+    }
+
+    private final BroadcastReceiver br = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            float lat = (float) intent.getDoubleExtra(LATITUDE, 0);
+            float lng = (float) intent.getDoubleExtra(LONGITUDE, 0);
+            showGeoLocationWeather(lat, lng);
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -116,6 +150,8 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
 
         setOnInputCityClickListener();
         setOnBtnClickListener();
+        setUpClickListenerForFindOutWeather();
+
 
         isExistWeather = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
@@ -135,10 +171,20 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == getGeoLocation.PERMISSION_REQUEST_CODE) {
+            if (grantResults.length == 2 &&
+                    (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                getGeoLocation.requestLocation(getContext());
+            }
+        }
+    }
 
     private void initView(View view) {
         searchCity = view.findViewById(R.id.inputCityText);
         searchButton = view.findViewById(R.id.buttonSearch);
+        findOutWeather = view.findViewById(R.id.buttonFindOutWeather);
         recyclerView = view.findViewById(R.id.recyclerView);
     }
 
@@ -156,6 +202,14 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         recyclerView.setAdapter(adapterChooseCity);
     }
 
+    public void setUpClickListenerForFindOutWeather () {
+        findOutWeather.setOnClickListener(view -> {
+            getGeoLocation = new GetGeoLocation();
+            getGeoLocation.requestPermissions(getContext(), getActivity());
+        });
+
+    }
+
     private void setOnInputCityClickListener() {
         searchCity.setOnClickListener(this::actionForChooseCity);
     }
@@ -165,7 +219,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     }
 
     private void actionForChooseCity(View view) {
-        city = Objects.requireNonNull(searchCity.getText()).toString();
+        String city = Objects.requireNonNull(searchCity.getText()).toString();
         if (!city.matches("")) {
 
             boolean isCityExist = false;
@@ -207,7 +261,8 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
                 WeatherFragment detail = WeatherFragment.create(getWeatherContainer());
                 setUpRecyclerView();
 
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
+            assert getFragmentManager() != null;
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.weather, detail);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack("Some key");
@@ -216,6 +271,28 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
             Intent intent = new Intent();
             intent.setClass(requireActivity(), WeatherActivity.class);
             intent.putExtra("cityName", getWeatherContainer());
+            startActivity(intent);
+        }
+    }
+
+    private void showGeoLocationWeather(Float lat, Float lng) {
+
+        if (isExistWeather) {
+
+            WeatherFragment detail = WeatherFragment.create(lat, lng);
+            setUpRecyclerView();
+
+            assert getFragmentManager() != null;
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.weather, detail);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.addToBackStack("Some key");
+            ft.commit();
+        } else {
+            Intent intent = new Intent();
+            intent.setClass(requireActivity(), WeatherActivity.class);
+            intent.putExtra("lat", lat);
+            intent.putExtra("lng", lng);
             startActivity(intent);
         }
     }
