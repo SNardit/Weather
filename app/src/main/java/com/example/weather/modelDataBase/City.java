@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey;
 @Entity (indices = {@Index(value = {"city_name"}, unique = true)})
 public class City {
 
-    public final static String ID = "id";
-    public final static String CITY_NAME = "city_name";
-    public final static String DATE = "date";
-    public final static String WEATHER = "weather";
+    public static final String ID = "id";
+    public static final String CITY_NAME = "city_name";
+    public static final String DATE = "date";
+    public static final String WEATHER = "weather";
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = ID)

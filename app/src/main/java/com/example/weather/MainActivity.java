@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -24,7 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class MainActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener {
 
-    BroadcastReceiver lowBatteryReceiver = new LowBatteryReceiver();
+    private BroadcastReceiver lowBatteryReceiver = new LowBatteryReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ implements NavigationView.OnNavigationItemSelectedListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("2", "name", importance);
+            NotificationChannel channel = new NotificationChannel("2", getString(R.string.common_google_play_services_notification_channel_name), importance);
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -63,7 +62,7 @@ implements NavigationView.OnNavigationItemSelectedListener {
 
     private void initDrawer(Toolbar toolbar){
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -99,8 +98,8 @@ implements NavigationView.OnNavigationItemSelectedListener {
                 startActivity(intent);
                 return true;
             case R.id.nav_feedback:
-                Snackbar.make(findViewById(R.id.nav_feedback), "Write feedback", Snackbar.LENGTH_LONG).
-                        setAction("Sent", (v) -> Snackbar.make(findViewById(R.id.nav_feedback), "Feedback was sent", Snackbar.LENGTH_LONG).show()).show();
+                Snackbar.make(findViewById(R.id.nav_feedback), getString(R.string.write_feedback), Snackbar.LENGTH_LONG).
+                        setAction(getString(R.string.sent), (v) -> Snackbar.make(findViewById(R.id.nav_feedback), getString(R.string.feedback_was_sent), Snackbar.LENGTH_LONG).show()).show();
                 return true;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

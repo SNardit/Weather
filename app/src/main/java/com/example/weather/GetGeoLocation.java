@@ -14,7 +14,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.weather.fragments.ChooseCityFragment;
+import com.example.weather.fragments.flavor.ChooseCityFragment;
+
 
 public class GetGeoLocation {
 

@@ -18,6 +18,9 @@ public class WeatherCheck {
     private OpenWeather openWeather;
     private static final String APP_ID = "2edc7c07fcaca5cef7f2aa2e3ba990bb";
     private static final String TAG = "CheckWeatherActivity";
+    private static final String URL = "https://api.openweathermap.org/";
+    private static final String METRIC = "metric";
+    private static final String ERROR = "error: ";
 
     private Float lat;
     private Float lon;
@@ -33,7 +36,7 @@ public class WeatherCheck {
 
         Retrofit retrofit;
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org/")
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -42,7 +45,7 @@ public class WeatherCheck {
     }
 
     public void requestRetrofitForCoord (String city, OnResponseCompletedWeatherRequest listener) {
-        openWeather.loadCoord(city, "metric", APP_ID).
+        openWeather.loadCoord(city, METRIC, APP_ID).
                 enqueue(new Callback<WeatherRequest>() {
                 @Override
                 public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
@@ -58,13 +61,13 @@ public class WeatherCheck {
 
                 @Override
                 public void onFailure(Call<WeatherRequest> call, Throwable t) {
-                    Log.e(TAG, "error: " + t.getMessage());
+                    Log.e(TAG, ERROR + t.getMessage());
                 }
             });
     }
 
     public void requestRetrofitForWeather (Float lat, Float lon, OnResponseCompletedOneCall listener) {
-        openWeather.loadOneCallWeather(lat, lon, "metric", APP_ID)
+        openWeather.loadOneCallWeather(lat, lon, METRIC, APP_ID)
                 .enqueue(new Callback<OneCallRequest>() {
                     @Override
                     public void onResponse(Call<OneCallRequest> call, Response<OneCallRequest> response) {
@@ -74,7 +77,7 @@ public class WeatherCheck {
 
                     @Override
                     public void onFailure(Call<OneCallRequest> call, Throwable t) {
-                        Log.e(TAG, "error: " + t.getMessage());
+                        Log.e(TAG, ERROR + t.getMessage());
                     }
                 });
     }

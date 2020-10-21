@@ -17,7 +17,7 @@
         android:layout_height="match_parent">
 
         <fragment
-            android:name="com.example.weather.fragments.ChooseCityFragment"
+            android:name="com.example.weather.fragments.flavor.ChooseCityFragment"
             android:id="@+id/cities"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

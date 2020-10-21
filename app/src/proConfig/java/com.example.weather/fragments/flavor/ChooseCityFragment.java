@@ -1,4 +1,4 @@
-package com.example.weather.fragments;
+package com.example.weather.fragments.flavor;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,9 +35,16 @@ import com.example.weather.WeatherActivity;
 import com.example.weather.WeatherContainer;
 import com.example.weather.WeatherSource;
 import com.example.weather.dao.WeatherDao;
+import com.example.weather.fragments.WeatherFragment;
 import com.example.weather.modelDataBase.City;
 import com.example.weather.recyclerChooseCity.IRVOnItemClick;
 import com.example.weather.recyclerChooseCity.RecyclerDataAdapterChooseCity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -46,14 +54,13 @@ import java.util.Objects;
 
 public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     private RecyclerView recyclerView;
-    private RecyclerDataAdapterChooseCity adapterChooseCity;
     private TextInputEditText searchCity;
     private MaterialButton searchButton;
     private MaterialButton findOutWeather;
 
-    public final static String BROADCAST_ACTION = "com.example.weather.fragments";
-    public final static String LATITUDE = "latitude";
-    public final static String LONGITUDE = "longitude";
+    public static final String BROADCAST_ACTION = "com.example.weather.fragments";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
 
     private static final String TAG = "ChooseCityFragment";
 
@@ -72,11 +79,22 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         return currentPosition;
     }
 
+    private SignInForGoogle signInForGoogle = new SignInForGoogle();
+
+    private GoogleSignInClient googleSignInClient;
+    private final int RC_SIGN_IN = 40404;
+
+
+
+    private com.google.android.gms.common.SignInButton buttonSignIn;
+    private MaterialButton buttonSingOut;
+    private TextView email;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
-        requireActivity().registerReceiver(br, intFilt);
+        IntentFilter intFilter = new IntentFilter(BROADCAST_ACTION);
+        requireActivity().registerReceiver(br, intFilter);
         return inflater.inflate(R.layout.choose_city_fragment, container, false);
     }
 
@@ -86,7 +104,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         try{
             requireActivity().unregisterReceiver(br);
         }catch (Exception e){
-            Log.d(TAG, "failed", e);
+            Log.d(TAG, getString(R.string.failed), e);
         }
     }
 
@@ -105,6 +123,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         initView(view);
         makeDecorator();
         setUpRecyclerView();
+        signInForGoogle.setUpGoogleSignIn();
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(CURRENT_POSITION, Context.MODE_PRIVATE);
         currentPosition = sharedPreferences.getLong(CURRENT_ID, 1);
     }
@@ -136,10 +155,9 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.infoAboutDevelopers:
-                setOnBtnInfoDevelop();
-                return true;
+        if (id == R.id.infoAboutDevelopers) {
+            setOnBtnInfoDevelop();
+            return true;
         }
         return false;
     }
@@ -152,11 +170,12 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         setOnBtnClickListener();
         setUpClickListenerForFindOutWeather();
 
+        signInForGoogle.checkGoogleSignIn();
 
         isExistWeather = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getLong("Current city", 1);
+            currentPosition = savedInstanceState.getLong(getString(R.string.current_city), 1);
             setUpRecyclerView();
         }
 
@@ -167,17 +186,27 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putLong("Current city", currentPosition);
+        outState.putLong(getString(R.string.current_city), currentPosition);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == getGeoLocation.PERMISSION_REQUEST_CODE) {
+        if (requestCode == GetGeoLocation.PERMISSION_REQUEST_CODE) {
             if (grantResults.length == 2 &&
                     (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 getGeoLocation.requestLocation(getContext());
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            signInForGoogle.handleSignInResult(task);
         }
     }
 
@@ -186,6 +215,9 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         searchButton = view.findViewById(R.id.buttonSearch);
         findOutWeather = view.findViewById(R.id.buttonFindOutWeather);
         recyclerView = view.findViewById(R.id.recyclerView);
+        buttonSignIn = view.findViewById(R.id.sign_in_button);
+        buttonSingOut = view.findViewById(R.id.sing_out_button);
+        email = view.findViewById(R.id.email);
     }
 
     public void setUpRecyclerView() {
@@ -198,7 +230,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
                 .getWeatherDao();
         weatherSource = new WeatherSource(weatherDao);
 
-        adapterChooseCity = new RecyclerDataAdapterChooseCity(weatherSource, this::onItemClick);
+        RecyclerDataAdapterChooseCity adapterChooseCity = new RecyclerDataAdapterChooseCity(weatherSource, this);
         recyclerView.setAdapter(adapterChooseCity);
     }
 
@@ -262,15 +294,16 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
                 setUpRecyclerView();
 
             assert getFragmentManager() != null;
+
             FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.weather, detail);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack("Some key");
+                ft.addToBackStack("weatherFragment");
                 ft.commit();
         } else {
             Intent intent = new Intent();
             intent.setClass(requireActivity(), WeatherActivity.class);
-            intent.putExtra("cityName", getWeatherContainer());
+            intent.putExtra(getString(R.string.city_name_string), getWeatherContainer());
             startActivity(intent);
         }
     }
@@ -286,20 +319,19 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.weather, detail);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.addToBackStack("Some key");
+            ft.addToBackStack("weatherFragment");
             ft.commit();
         } else {
             Intent intent = new Intent();
             intent.setClass(requireActivity(), WeatherActivity.class);
-            intent.putExtra("lat", lat);
-            intent.putExtra("lng", lng);
+            intent.putExtra(getString(R.string.latitude), lat);
+            intent.putExtra(getString(R.string.longitude), lng);
             startActivity(intent);
         }
     }
 
     private WeatherContainer getWeatherContainer() {
-        WeatherContainer container = new WeatherContainer(getCityByCurrentPosition(currentPosition));
-        return container;
+        return new WeatherContainer(getCityByCurrentPosition(currentPosition));
     }
 
     @Override
@@ -327,6 +359,71 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
         Intent intent = new Intent();
         intent.setClass(requireActivity(), AboutDevelopers.class);
         startActivity(intent);
+    }
+
+    public class SignInForGoogle {
+        
+        private void setUpGoogleSignIn(){
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+
+            googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(requireContext(), gso);
+
+            buttonSignIn.setOnClickListener(v -> signIn()
+            );
+
+            buttonSingOut.setOnClickListener(v -> signOut());
+        }
+
+        private void signIn() {
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        }
+
+        private void signOut() {
+            googleSignInClient.signOut()
+                    .addOnCompleteListener(requireActivity(), task -> {
+                        enableSign();
+                        updateUI(getString(R.string.email));
+                    });
+        }
+
+        private void checkGoogleSignIn() {
+            signInForGoogle.enableSign();
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
+            if (account != null) {
+                signInForGoogle.disableSign();
+                signInForGoogle.updateUI(account.getEmail());
+            }
+        }
+
+        private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+            try {
+                GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+                disableSign();
+                assert account != null;
+                updateUI(account.getEmail());
+            } catch (ApiException e) {
+                String TAG = "GoogleAuth";
+                Log.w(TAG, getString(R.string.sign_in_filed_code) + e.getStatusCode());
+            }
+        }
+
+        private void updateUI(String e_mail) {
+            email.setText(e_mail);
+        }
+
+        private void enableSign(){
+            buttonSignIn.setEnabled(true);
+            buttonSingOut.setEnabled(false);
+        }
+
+        private void disableSign(){
+            buttonSignIn.setEnabled(false);
+            buttonSingOut.setEnabled(true);
+        }
     }
 
 }

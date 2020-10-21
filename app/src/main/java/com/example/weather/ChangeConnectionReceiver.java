@@ -16,22 +16,18 @@ public class ChangeConnectionReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-        String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
-        boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
+        NetworkInfo currentNetworkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 
-        NetworkInfo currentNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-        NetworkInfo otherNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_OTHER_NETWORK_INFO);
-
+        assert currentNetworkInfo != null;
         if(currentNetworkInfo.isConnected()){
-            Toast.makeText(context.getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
+            Toast.makeText(context.getApplicationContext(), context.getString(R.string.connected), Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(context.getApplicationContext(), "Not Connected", Toast.LENGTH_LONG).show();
+            Toast.makeText(context.getApplicationContext(), context.getString(R.string.not_connected), Toast.LENGTH_LONG).show();
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "2")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Broadcast Receiver")
-                .setContentText("No Internet Connection");
+                .setContentTitle(context.getString(R.string.broadcast_receiver))
+                .setContentText(context.getString(R.string.no_internet_connection));
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(messageId++, builder.build());

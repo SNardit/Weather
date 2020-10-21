@@ -24,7 +24,7 @@ public class App extends Application {
 
         db = Room.databaseBuilder (
                 getApplicationContext(),
-                WeatherDatabase.class, "weather_database")
+                WeatherDatabase.class, getString(R.string.weather_database))
                 .allowMainThreadQueries()
                 .build();
     }

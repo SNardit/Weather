@@ -33,6 +33,7 @@ import com.example.weather.AboutDevelopers;
 import com.example.weather.R;
 import com.example.weather.WeatherContainer;
 import com.example.weather.WeatherService;
+import com.example.weather.fragments.flavor.ChooseCityFragment;
 import com.example.weather.recyclerWeatherByDays.RecyclerDataAdapterWeatherByDays;
 import com.example.weather.recyclerWeatherByDays.WeatherByDays;
 import com.example.weather.recyclerWeatherByHours.RecyclerDataAdapterWeatherByHours;
@@ -47,6 +48,8 @@ import java.util.Objects;
 
 
 public class WeatherFragment extends Fragment {
+
+    private String cityName;
 
     private TextView cityTextView;
     private TextView dateView;
@@ -73,33 +76,33 @@ public class WeatherFragment extends Fragment {
     private static Float latitude;
     private static Float longitude;
 
-    public final static String BROADCAST_ACTION = "com.example.weather";
-    public final static String TEMP = "temp";
-    public final static String ID = "id";
-    public final static String DESCRIPTION = "description";
-    public final static String DATE = "date";
-    public final static String DATE_HISTORY = "dateHistory";
-    public final static String WEATHER_BY_HOURS = "weatherByHours";
-    public final static String WEATHER_BY_DAYS = "weatherByDays";
-    public final static String NO_CITY = "noCity";
-    public final static String CITY_NAME = "cityName";
-    public final static String WARNING_TEMPERATURE = "warningTemperature";
+    public static final String BROADCAST_ACTION = "com.example.weather";
+    public static final String TEMP = "temp";
+    public static final String ID = "id";
+    public static final String DESCRIPTION = "description";
+    public static final String DATE = "date";
+    public static final String DATE_HISTORY = "dateHistory";
+    public static final String WEATHER_BY_HOURS = "weatherByHours";
+    public static final String WEATHER_BY_DAYS = "weatherByDays";
+    public static final String NO_CITY = "noCity";
+    public static final String CITY_NAME = "cityName";
+    public static final String DATABASE_CITY = "dataBaseCity";
+    public static final String WARNING_TEMPERATURE = "warningTemperature";
 
 
-    static WeatherFragment create(WeatherContainer container) {
+    public static WeatherFragment create(WeatherContainer container) {
         WeatherFragment fragment = new WeatherFragment();
-
         Bundle args = new Bundle();
         args.putParcelable("cityName", container);
         fragment.setArguments(args);
         return fragment;
     }
 
-    static WeatherFragment create(Float lat, Float lng) {
+    public static WeatherFragment create(Float lat, Float lng) {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
-        args.putFloat("lat", lat);
-        args.putFloat("lng", lng);
+        args.putFloat("latitude", lat);
+        args.putFloat("longitude", lng);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,7 +112,7 @@ public class WeatherFragment extends Fragment {
         Bundle bundle = this.getArguments();
         try {
             assert bundle != null;
-            WeatherContainer weatherContainer = bundle.getParcelable("cityName");
+            WeatherContainer weatherContainer = bundle.getParcelable(getString(R.string.city_name_string));
             assert weatherContainer != null;
             return weatherContainer.getCityName();
         } catch (Exception e) {
@@ -122,7 +125,7 @@ public class WeatherFragment extends Fragment {
         Bundle bundle = this.getArguments();
         try {
             assert bundle != null;
-            return bundle.getFloat("lat");
+            return bundle.getFloat(getString(R.string.latitude));
         } catch (Exception e) {
             return null;
         }
@@ -133,7 +136,7 @@ public class WeatherFragment extends Fragment {
         Bundle bundle = this.getArguments();
         try {
             assert bundle != null;
-            return bundle.getFloat("lng");
+            return bundle.getFloat(getString(R.string.longitude));
         } catch (Exception e) {
             return null;
         }
@@ -144,8 +147,8 @@ public class WeatherFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.weather_fragment, container, false);
 
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
-        requireActivity().registerReceiver(br, intFilt);
+        IntentFilter intFilter = new IntentFilter(BROADCAST_ACTION);
+        requireActivity().registerReceiver(br, intFilter);
         initNotificationChannel();
 
         return view;
@@ -164,15 +167,15 @@ public class WeatherFragment extends Fragment {
                         .into(backgroundView);
             }
 
-
+            String dataBaseCity = intent.getStringExtra(DATABASE_CITY);
             String description = intent.getStringExtra(DESCRIPTION);
             String date = intent.getStringExtra(DATE);
             String dateHistory = intent.getStringExtra(DATE_HISTORY);
-            String cityName = intent.getStringExtra(CITY_NAME);
+            String geoCityName = intent.getStringExtra(CITY_NAME);
             String warningTemperature = intent.getStringExtra(WARNING_TEMPERATURE);
 
             if (intent.getIntExtra(NO_CITY, -1) == 0) {
-                dlgBuilder.show(requireActivity().getSupportFragmentManager(), "dialogBuilder");
+                dlgBuilder.show(requireActivity().getSupportFragmentManager(), getString(R.string.dialog_builder));
             } else {
 
                 SharedPreferences sharedPreferences = requireContext().getSharedPreferences(CURRENT_POSITION, Context.MODE_PRIVATE);
@@ -180,8 +183,8 @@ public class WeatherFragment extends Fragment {
                 editor.putLong(CURRENT_ID, ChooseCityFragment.getCurrentPosition());
                 editor.apply();
 
-                if (cityName != null) {
-                    cityTextView.setText(cityName);
+                if (geoCityName != null) {
+                    cityTextView.setText(geoCityName);
                 }
                 if (warningTemperature != null) {
                     notification(warningTemperature);
@@ -189,8 +192,8 @@ public class WeatherFragment extends Fragment {
                 tempTextView.setText(temp);
                 descriptionTextView.setText(description);
                 dateView.setText(date);
-                ChooseCityFragment.weatherSource.updateCityDateByCityName(cityName, dateHistory);
-                ChooseCityFragment.weatherSource.updateCityWeatherByCityName(cityName, temp);
+                ChooseCityFragment.weatherSource.updateCityDateByCityName(dataBaseCity, dateHistory);
+                ChooseCityFragment.weatherSource.updateCityWeatherByCityName(dataBaseCity, temp);
 
                 weatherByHours.addAll(Objects.requireNonNull(intent.getParcelableArrayListExtra(WEATHER_BY_HOURS)));
                 setUpRecyclerViewHours();
@@ -209,7 +212,7 @@ public class WeatherFragment extends Fragment {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        Log.w("PushMessage", "getInstanceId failed", task.getException());
+                        Log.w(getString(R.string.push_message), getString(R.string.get_instance_id_filed), task.getException());
                         return;
                     }
 
@@ -221,7 +224,7 @@ public class WeatherFragment extends Fragment {
     private void notification (String message) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), "2")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Weather notification")
+                .setContentTitle(getString(R.string.weather_notication))
                 .setContentText(message);
         NotificationManager notificationManager =
                 (NotificationManager) requireContext().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -244,7 +247,7 @@ public class WeatherFragment extends Fragment {
         initGetToken(view);
         setUpRecyclerViewHours();
         setUpRecyclerViewDays();
-        String cityName = getCityName();
+        cityName = getCityName();
         latitude = getLatitude();
         longitude = getLongitude();
         cityTextView.setText(cityName);
@@ -259,7 +262,7 @@ public class WeatherFragment extends Fragment {
         try{
             requireActivity().unregisterReceiver(br);
         }catch (Exception e){
-            Log.d(TAG, "failed", e);
+            Log.d(TAG, getString(R.string.failed), e);
         }
     }
 
@@ -297,11 +300,11 @@ public class WeatherFragment extends Fragment {
     private void getWeatherData() {
         Intent intent = new Intent(getActivity(), WeatherService.class);
         if (latitude != 0.0 && longitude != 0.0) {
-            intent.putExtra("lat", latitude);
-            intent.putExtra("lng", longitude);
+            intent.putExtra(getString(R.string.latitude), latitude);
+            intent.putExtra(getString(R.string.longitude), longitude);
             requireActivity().startService(intent);
         } else {
-            requireActivity().startService(intent.putExtra("city", getCityName()));
+            requireActivity().startService(intent.putExtra(getString(R.string.city), getCityName()));
         }
     }
 
@@ -340,7 +343,7 @@ public class WeatherFragment extends Fragment {
 
     private void setOnBtnInfoCity() {
         String city = cityTextView.getText().toString();
-        Uri uri = Uri.parse("https://wikipedia.org/wiki/" + city);
+        Uri uri = Uri.parse(getString(R.string.url_wiki) + city);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }

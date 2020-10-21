@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Погода</string>
-    <string name="moscow">Москва</string>
-    <string name="new_york">Нью-Йорк</string>
-    <string name="empty_string" translatable="false"> </string>
     <string name="today">Сегодня</string>
     <string name="change_city">Сменить город</string>
-    <string name="c_f" translatable="false">C / F</string>
     <string name="search_city">Город</string>
-    <string name="st_petersburg">Санкт-Петербург</string>
-    <string name="omsk">Омск</string>
-    <string name="los_angeles">Лос-Анджелес</string>
-    <string name="anapa">Анапа</string>
     <string name="show_details">Показать:</string>
-    <string name="empty_list">Empty list</string>
-    <string name="date_format" translatable="false">%1$s %2$te %2$tB %2$tY, %2$tA</string>
     <string name="search">Поиск</string>
     <string name="enter_city">Ввести город</string>
     <string name="city_info">Информация о городе</string>
     <string name="about_developers">О разработчиках</string>
-    <string name="text_about_developers" translatable="false">©snardit-2020 \n
-        e-mail:s.nardit@gmail.com</string>
     <string name="home">Домой</string>
-    <string name="city">City</string>
-    <string name="description">Description</string>
-    <string name="date">Date</string>
-    <string name="temp">Temp</string>
-    <string name="hour">Hour</string>
-    <string name="day_of_week">dayOfWeek</string>
-    <string name="NoteAboutCityDontExistInHistory">is not in your forecast history</string>
-    <string name="phone">000-000-00-00</string>
-    <string name="connection_error_or_and_city_is_not_exist">Connection error or/and city is not exist!</string>
-    <string name="ok">OK</string>
-    <string name="find_out_current_weather">Find out current weather</string>
+    <string name="NoteAboutCityDontExistInHistory">" нет в вашей истории поиска"</string>
+    <string name="connection_error_or_and_city_is_not_exist">Проблемы с подключением и/или город не найден</string>
+    <string name="find_out_current_weather">Узнать текущую погоду</string>
+    <string name="write_feedback">Написать отзыв</string>
+    <string name="sent">Отправить</string>
+    <string name="feedback_was_sent">Отзыв отправлен</string>
+    <string name="low_battery">Низкий заряд батареи</string>
+    <string name="show_warning_be_careful">Осторожнее! Очень холодно снаружи!</string>
+    <string name="feedback">Обратная связь</string>
+
 </resources>

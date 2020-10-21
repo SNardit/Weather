@@ -51,7 +51,7 @@ public class WeatherActivity extends AppCompatActivity implements NavigationView
 
     private void initDrawer(Toolbar toolbar) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -75,8 +75,8 @@ public class WeatherActivity extends AppCompatActivity implements NavigationView
                 startActivity(intentDevelop);
                 return true;
             case R.id.nav_feedback:
-                Snackbar.make(findViewById(R.id.nav_feedback), "Write feedback", Snackbar.LENGTH_LONG).
-                        setAction("Sent", (v) -> Snackbar.make(findViewById(R.id.nav_feedback), "Feedback was sent", Snackbar.LENGTH_LONG).show()).show();
+                Snackbar.make(findViewById(R.id.nav_feedback), getString(R.string.write_feedback), Snackbar.LENGTH_LONG).
+                        setAction(getString(R.string.sent), (v) -> Snackbar.make(findViewById(R.id.nav_feedback), getString(R.string.feedback_was_sent), Snackbar.LENGTH_LONG).show()).show();
                 return true;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

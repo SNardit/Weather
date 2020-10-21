@@ -15,8 +15,8 @@ public class LowBatteryReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "2")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Broadcast Receiver")
-                .setContentText("Low battery");
+                .setContentTitle(context.getString(R.string.broadcast_receiver))
+                .setContentText(context.getString(R.string.low_battery));
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(messageId++, builder.build());
