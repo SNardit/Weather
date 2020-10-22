@@ -61,7 +61,7 @@ public class WeatherCheck {
 
                 @Override
                 public void onFailure(Call<WeatherRequest> call, Throwable t) {
-                    Log.e(TAG, ERROR + t.getMessage());
+                    Log.e(TAG, ERROR, t);
                 }
             });
     }
@@ -77,7 +77,7 @@ public class WeatherCheck {
 
                     @Override
                     public void onFailure(Call<OneCallRequest> call, Throwable t) {
-                        Log.e(TAG, ERROR + t.getMessage());
+                        Log.e(TAG, ERROR, t);
                     }
                 });
     }

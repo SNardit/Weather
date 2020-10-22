@@ -55,7 +55,7 @@ public class CityNameCheck {
 
                     @Override
                     public void onFailure(Call<CityRequest> call, Throwable t) {
-                        Log.e(TAG,  ERROR + t.getMessage());
+                        Log.e(TAG, ERROR, t);
                     }
                 });
     }

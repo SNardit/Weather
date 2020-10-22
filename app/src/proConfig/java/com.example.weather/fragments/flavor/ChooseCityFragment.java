@@ -407,7 +407,7 @@ public class ChooseCityFragment extends Fragment implements IRVOnItemClick {
                 updateUI(account.getEmail());
             } catch (ApiException e) {
                 String TAG = "GoogleAuth";
-                Log.w(TAG, getString(R.string.sign_in_filed_code) + e.getStatusCode());
+                Log.w(TAG, getString(R.string.sign_in_filed_code), e);
             }
         }
 

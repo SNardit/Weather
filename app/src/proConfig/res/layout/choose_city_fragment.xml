@@ -49,26 +49,27 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputCityLayout"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
         style="@style/margin_start_end"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@id/buttonSearch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonFindOutWeather">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputCityText"
+            style="@style/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_city"
-            style="@style/text"
-            android:inputType="textPersonName"
-            android:imeOptions="flagNoExtractUi"
-            android:maxLines="1"
-            android:maxLength="30"
             android:background="@color/background"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:hint="@string/enter_city"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textPersonName"
+            android:maxLength="30"
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,6 +80,7 @@
         android:gravity="center_vertical"
         android:layout_marginEnd="20dp"
         android:text="@string/search"
+        app:layout_constraintStart_toEndOf="@id/inputCityLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/inputCityLayout"
         app:layout_constraintBottom_toBottomOf="@id/inputCityLayout"/>

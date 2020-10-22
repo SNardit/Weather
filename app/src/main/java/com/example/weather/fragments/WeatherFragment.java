@@ -116,6 +116,7 @@ public class WeatherFragment extends Fragment {
             assert weatherContainer != null;
             return weatherContainer.getCityName();
         } catch (Exception e) {
+            Log.e(TAG, "error: ", e);
             return "";
         }
     }
@@ -127,6 +128,7 @@ public class WeatherFragment extends Fragment {
             assert bundle != null;
             return bundle.getFloat(getString(R.string.latitude));
         } catch (Exception e) {
+            Log.e(TAG, "error: ", e);
             return null;
         }
     }
@@ -138,6 +140,7 @@ public class WeatherFragment extends Fragment {
             assert bundle != null;
             return bundle.getFloat(getString(R.string.longitude));
         } catch (Exception e) {
+            Log.e(TAG, "error: ", e);
             return null;
         }
     }
