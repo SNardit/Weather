@@ -1,16 +1,9 @@
 <resources>
     <string name="app_name">Weather</string>
-    <string name="moscow">Moscow</string>
-    <string name="new_york">New York</string>
     <string name="empty_string" translatable="false"> </string>
     <string name="today">Today</string>
     <string name="change_city">Change city</string>
-    <string name="c_f">C / F</string>
     <string name="search_city">City</string>
-    <string name="st_petersburg">St.Petersburg</string>
-    <string name="omsk">Omsk</string>
-    <string name="los_angeles">Los Angeles</string>
-    <string name="anapa">Anapa</string>
     <string name="show_details">Show:</string>
     <string name="empty_list" translatable="false">Empty list</string>
     <string name="date_format" translatable="false">%1$s %2$te %2$tB %2$tY, %2$tA</string>
@@ -21,19 +14,51 @@
     <string name="text_about_developers" translatable="false">©snardit-2020 \n
         e-mail:s.nardit@gmail.com</string>
     <string name="home">Home</string>
-    <string name="city" translatable="false">City</string>
+    <string name="city" translatable="false">city</string>
     <string name="description" translatable="false">Description</string>
     <string name="date" translatable="false">Date</string>
     <string name="temp" translatable="false">Temp</string>
     <string name="hour" translatable="false">Hour</string>
     <string name="day_of_week" translatable="false">dayOfWeek</string>
     <string name="feedback">Feedback</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="navigation_header">Navigation header</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="navigation_header" translatable="false">Navigation header</string>
     <string name="NoteAboutCityDontExistInHistory"> is not in your forecast history</string>
-    <string name="e_mail">qwerty@gmail.com</string>
-    <string name="phone">000-000-00-00</string>
+    <string name="e_mail" translatable="false">qwerty@gmail.com</string>
+    <string name="phone" translatable="false">000–000–00-00</string>
     <string name="connection_error_or_and_city_is_not_exist">Connection error or/and city is not exist!</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="find_out_current_weather">Find out current weather</string>
+    <string name="sign_out" translatable="false">Sign out</string>
+    <string name="email" translatable="false">email</string>
+    <string name="current_city" translatable="false">Current city</string>
+    <string name="city_name_string" translatable="false">cityName</string>
+    <string name="latitude" translatable="false">latitude</string>
+    <string name="longitude" translatable="false">longitude</string>
+    <string name="sign_in_filed_code" translatable="false">signInResult:failed code=</string>
+    <string name="failed" translatable="false">failed</string>
+    <string name="dialog_builder" translatable="false">dialogBuilder</string>
+    <string name="push_message" translatable="false">PushMessage</string>
+    <string name="get_instance_id_filed" translatable="false">getInstanceId failed</string>
+    <string name="weather_notication" translatable="false">Weather notification</string>
+    <string name="url_wiki" translatable="false">https://wikipedia.org/wiki/</string>
+    <string name="write_feedback">Write feedback</string>
+    <string name="sent">Sent</string>
+    <string name="feedback_was_sent">Feedback was sent</string>
+    <string name="weather_database" translatable="false">Weather database</string>
+    <string name="connected" translatable="false">Connected</string>
+    <string name="not_connected" translatable="false">Not Connected</string>
+    <string name="broadcast_receiver" translatable="false">Broadcast Receiver</string>
+    <string name="no_internet_connection" translatable="false">No Internet Connection</string>
+    <string name="error" translatable="false">\"error: \"</string>
+    <string name="token" translatable="false">\"Token \"</string>
+    <string name="low_battery">Low battery</string>
+    <string name="show_warning_be_careful">Be careful it\'s very cold outside!!</string>
+    <string name="celsius" translatable="false">ºC</string>
+    <string name="date_format_for_today" translatable="false">dd MMMM yyyy, EEEE</string>
+    <string name="date_format_for_history" translatable="false">d MMM yy</string>
+    <string name="date_format_for_daytime" translatable="false">EEEE</string>
+    <string name="date_format_for_hourly" translatable="false">HH</string>
+
 </resources>

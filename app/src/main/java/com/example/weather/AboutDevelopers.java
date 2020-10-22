@@ -1,15 +1,15 @@
 package com.example.weather;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,7 +32,7 @@ public class AboutDevelopers extends AppCompatActivity implements NavigationView
 
     private void initDrawer(Toolbar toolbar) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -53,8 +53,8 @@ public class AboutDevelopers extends AppCompatActivity implements NavigationView
             case R.id.nav_develop:
                 return true;
             case R.id.nav_feedback:
-                Snackbar.make(findViewById(R.id.nav_feedback), "Write feedback", Snackbar.LENGTH_LONG).
-                        setAction("Sent", (v) -> Snackbar.make(findViewById(R.id.nav_feedback), "Feedback was sent", Snackbar.LENGTH_LONG).show()).show();
+                Snackbar.make(findViewById(R.id.nav_feedback), R.string.write_feedback, Snackbar.LENGTH_LONG).
+                        setAction(R.string.sent, (v) -> Snackbar.make(findViewById(R.id.nav_feedback), R.string.feedback_was_sent, Snackbar.LENGTH_LONG).show()).show();
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -1,7 +1,6 @@
 package com.example.weather.dao;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -20,9 +19,6 @@ public interface WeatherDao {
     @Update
     void updateCity(City city);
 
-    @Delete
-    void deleteCity(City city);
-
     @Query("UPDATE city SET date  = :date WHERE city_name = :city_name")
     void updateCityDateByCityName(String city_name, String date);
 
@@ -34,9 +30,6 @@ public interface WeatherDao {
 
     @Query("SELECT id, city_name, date, weather FROM city")
     List<City> getAllCities();
-
-    @Query("SELECT id, city_name FROM city WHERE id = :id")
-    City getCityById(long id);
 
     @Query("SELECT id FROM city WHERE city_name = :city_name")
     int getCityIdByCityName(String city_name);

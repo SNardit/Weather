@@ -11,16 +11,27 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    flavorDimensions 'view'
+    productFlavors {
+        freeConfig {
+            dimension 'view'
+            versionNameSuffix '.free'
+            applicationIdSuffix ".free"
+        }
+
+        proConfig {
+            dimension 'view'
+            versionNameSuffix '.pro'
+            applicationIdSuffix ".pro"
+        }
+    }
+
+
 }
 
 dependencies {
@@ -37,6 +48,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "android.arch.persistence.room:runtime:1.1.1"
     implementation 'androidx.room:room-runtime:2.2.5'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.firebase:firebase-messaging:20.3.0'
     implementation 'com.google.firebase:firebase-analytics'
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
