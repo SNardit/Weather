@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,10 @@ import com.example.weather.recyclerWeatherByDays.RecyclerDataAdapterWeatherByDay
 import com.example.weather.recyclerWeatherByDays.WeatherByDays;
 import com.example.weather.recyclerWeatherByHours.RecyclerDataAdapterWeatherByHours;
 import com.example.weather.recyclerWeatherByHours.WeatherByHours;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,6 +48,9 @@ import java.util.Date;
 
 
 public class WeatherFragment extends Fragment {
+
+    private String cityName;
+
     private TextView cityTextView;
     private TextView dateView;
     private TextView tempTextView;
@@ -63,6 +71,9 @@ public class WeatherFragment extends Fragment {
 
     private DialogBuilderFragment dlgBuilder;
 
+    private static final String CURRENT_POSITION = "Current position";
+    private static final String CURRENT_ID = "currentId";
+
     public final static String BROADCAST_ACTION = "com.example.weather";
     public final static String TEMP = "temp";
     public final static String ID = "id";
@@ -72,6 +83,7 @@ public class WeatherFragment extends Fragment {
     public final static String WEATHER_BY_HOURS = "weatherByHours";
     public final static String WEATHER_BY_DAYS = "weatherByDays";
     public final static String NO_CITY = "noCity";
+
 
 
     static WeatherFragment create(WeatherContainer container) {
@@ -130,15 +142,15 @@ public class WeatherFragment extends Fragment {
                 dlgBuilder.show(getActivity().getSupportFragmentManager(), "dialogBuilder");
             } else {
 
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences("Current position", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(CURRENT_POSITION, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putLong("currentId", ChooseCityFragment.getCurrentPosition());
+                editor.putLong(CURRENT_ID, ChooseCityFragment.getCurrentPosition());
                 editor.apply();
                 tempTextView.setText(temp);
                 descriptionTextView.setText(description);
                 dateView.setText(date);
-                ChooseCityFragment.weatherSource.updateCityDateByCityName(getCityName(), dateHistory);
-                ChooseCityFragment.weatherSource.updateCityWeatherByCityName(getCityName(), temp);
+                ChooseCityFragment.weatherSource.updateCityDateByCityName(cityName, dateHistory);
+                ChooseCityFragment.weatherSource.updateCityWeatherByCityName(cityName, temp);
 
                 weatherByHours.addAll(intent.getParcelableArrayListExtra(WEATHER_BY_HOURS));
                 setUpRecyclerViewHours();
@@ -149,6 +161,26 @@ public class WeatherFragment extends Fragment {
 
         }
     };
+
+    private void initGetToken(View view) {
+
+        final EditText textToken = view.findViewById(R.id.textToken);
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("PushMessage", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        String token = task.getResult().getToken();
+                        textToken.setText(token);
+                    }
+                });
+    }
+
 
     private void initNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -163,9 +195,10 @@ public class WeatherFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        initGetToken(view);
         setUpRecyclerViewHours();
         setUpRecyclerViewDays();
-        String cityName = getCityName();
+        cityName = getCityName();
         cityTextView.setText(cityName);
         setDate();
         dlgBuilder = new DialogBuilderFragment();
@@ -178,7 +211,7 @@ public class WeatherFragment extends Fragment {
         try{
             requireActivity().unregisterReceiver(br);
         }catch (Exception e){
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, "failed", e);
         }
     }
 
